@@ -1,0 +1,23 @@
+.product-section { padding:32px 0; }
+.product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+.product-card { cursor:pointer; transition:transform .2s; border-radius:12px; overflow:hidden; background:#fff; box-shadow:var(--shadow-sm); border:1px solid #f0f0f0; }
+.product-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
+.product-img { aspect-ratio:3/4; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.product-emoji { font-size:60px; opacity:.75; }
+.product-discount-tag { position:absolute; top:12px; left:12px; background:var(--pink); color:white; font-size:11px; font-weight:700; padding:3px 8px; border-radius:4px; }
+.wishlist-btn { position:absolute; top:10px; right:10px; font-size:20px; color:#ccc; background:rgba(255,255,255,.85); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:color .2s,transform .2s; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+.wishlist-btn:hover { transform:scale(1.15); }
+.wishlist-btn.wished { color:var(--pink); }
+.product-info { padding:10px 12px 12px; }
+.product-brand { font-size:11px; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+.product-name { font-size:13px; font-weight:500; color:#222; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.product-prices { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+.price-current { font-size:14px; font-weight:700; color:#111; }
+.price-original { font-size:11px; color:#999; text-decoration:line-through; }
+.price-off { font-size:11px; color:var(--pink); font-weight:600; }
+.add-cart-btn { width:100%; padding:8px; border-radius:6px; border:1.5px solid var(--pink); color:var(--pink); font-size:12px; font-weight:600; transition:all .2s; background:#fff; }
+.add-cart-btn:hover { background:var(--pink); color:#fff; }
+.add-cart-btn.in-cart { background:var(--pink); color:#fff; border-color:var(--pink); }
+@media(max-width:1100px){ .product-grid{grid-template-columns:repeat(3,1fr);} }
+@media(max-width:720px){ .product-grid{grid-template-columns:repeat(2,1fr); gap:12px;} }
+@media(max-width:380px){ .product-grid{grid-template-columns:1fr;} }

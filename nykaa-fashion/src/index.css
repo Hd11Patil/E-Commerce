@@ -1,0 +1,27 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pink: #fc2779;
+  --pink-light: #ff4d8d;
+  --dark: #1a1a1a;
+  --gray-100: #f8f8f8;
+  --gray-200: #efefef;
+  --gray-400: #999;
+  --gray-600: #555;
+  --white: #ffffff;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  --radius: 8px;
+  --nav-h: 64px;
+}
+body { font-family: var(--font-body); color: var(--dark); background: var(--white); -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
+img { max-width: 100%; display: block; }
+.container { max-width: 1440px; margin: 0 auto; padding: 0 24px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-title { font-size: 20px; font-weight: 700; color: #111; }
+.see-all { font-size: 13px; font-weight: 600; color: var(--pink); transition: opacity .2s; }
+.see-all:hover { opacity: .7; }
+@media(max-width:768px){ .section-title{font-size:17px;} }
