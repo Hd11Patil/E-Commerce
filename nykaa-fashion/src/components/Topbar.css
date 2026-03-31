@@ -1,5 +1,0 @@
-.topbar { background:#111; color:#ccc; font-size:12px; padding:6px 0; }
-.topbar-inner { max-width:1440px; margin:0 auto; padding:0 24px; display:flex; justify-content:flex-end; gap:24px; }
-.topbar-inner span { cursor:pointer; transition:color .2s; }
-.topbar-inner span:hover { color:#fff; }
-@media(max-width:480px){ .topbar-hide-sm{ display:none; } }
