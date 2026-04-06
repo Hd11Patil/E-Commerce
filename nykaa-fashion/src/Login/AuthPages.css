@@ -1,0 +1,91 @@
+.auth-page {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2.5rem 2rem;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.auth-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.auth-input {
+  padding: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  background-color: #fafafa;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #fc2779;
+}
+
+/* --- UPDATED BUTTON STYLES BELOW TO MATCH IMAGE --- */
+
+.auth-btn {
+  background-color: #fc2779; /* Vibrant pink brand color */
+  color: #ffffff;
+  font-size: 1.1rem; /* Slightly larger, bold text */
+  font-weight: 700; /* Extra bold text, matching the image */
+  padding: 0.85rem;
+  border: none;
+  border-radius: 6px; /* Soft, robust corner radius from image */
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  margin-top: 0.5rem;
+  text-align: center;
+  width: 100%;
+  letter-spacing: 0.5px; /* Subtle spacing makes the text look clean */
+  text-transform: capitalize; /* Ensure button text matches capitalization style from image */
+}
+
+.auth-btn:hover {
+  background-color: #e01e68; /* Slightly darker pink on hover for interaction feedback */
+}
+
+.auth-btn:active {
+  transform: scale(0.98); /* Subtle scale effect on click */
+}
+
+/* ----------------------------------- */
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.auth-link {
+  color: #fc2779;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}

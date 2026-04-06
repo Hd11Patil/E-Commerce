@@ -1,0 +1,73 @@
+.topbar {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #eaeaea;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.topbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.4rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.topbar-left {
+  color: #666;
+  font-weight: 500;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Slightly reduced gap so the dividers fit perfectly */
+}
+
+.topbar-link {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.topbar-link:hover {
+  color: #fc2779;
+}
+
+/* --- UPDATED BLUE LOGIN & REGISTER LINKS --- */
+.login-link,
+.register-link {
+  color: #006ebc; /* Exact blue from your image */
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover,
+.register-link:hover {
+  color: #004b82; /* Slightly darker blue on hover */
+  text-decoration: underline;
+}
+
+/* --- UPDATED THIN GRAY DIVIDER --- */
+.topbar-divider {
+  color: #d1d1d1;
+  font-size: 1rem;
+  margin: 0 4px;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+  .topbar-container {
+    justify-content: center;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import "./Navbar.css";
 
@@ -22,7 +23,12 @@ const Navbar = ({ onAdminClick }) => {
 
         {/* Logo */}
         <div className="navbar-logo">
-          <span className="logo-nykaa">TECYGIG</span>
+          <span
+            className="logo-nykaa"
+            onClick={() => (window.location.href = "/")}
+          >
+            TECYGIG
+          </span>
         </div>
 
         {/* Nav links desktop */}
@@ -39,6 +45,7 @@ const Navbar = ({ onAdminClick }) => {
               {item}
             </button>
           ))}
+
           <button
             className="nav-link admin-nav-link"
             onClick={() => {
@@ -70,20 +77,39 @@ const Navbar = ({ onAdminClick }) => {
             <span className="action-icon">👤</span>
             <span className="action-label">Account</span>
           </button>
-          <button className="action-btn">
+
+          {/* CHANGED: Button is now a Link pointing to /wishlist */}
+          <Link
+            to="/wishlist"
+            className="action-btn"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <span className="action-icon">♡</span>
             <span className="action-label hide-sm">Wishlist</span>
             {wishlist.length > 0 && (
               <span className="action-badge">{wishlist.length}</span>
             )}
-          </button>
-          <button className="action-btn">
+          </Link>
+
+          {/* <button className="action-btn">
             <span className="action-icon">🛒</span>
             <span className="action-label hide-sm">Cart</span>
             {cart.length > 0 && (
               <span className="action-badge">{cart.length}</span>
             )}
-          </button>
+          </button> */}
+
+          <Link
+            to="/cart"
+            className="action-btn"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <span className="action-icon">🛒</span>
+            <span className="action-label hide-sm">Cart</span>
+            {cart.length > 0 && (
+              <span className="action-badge">{cart.length}</span>
+            )}
+          </Link>
         </div>
       </div>
 

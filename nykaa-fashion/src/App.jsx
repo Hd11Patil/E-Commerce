@@ -1,15 +1,36 @@
 import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom"; // IMPORT ROUTER
 import "./App.css";
 import { AppProvider, useApp } from "./context/AppContext";
 import Navbar from "./components/Navbar";
 import HeroBanner from "./components/HeroBanner";
-import CategoryStrip from "./components/CategoryStrip";
 import TrendingSection from "./components/TrendingSection";
 import PromoBanner from "./components/PromoBanner";
 import ProductGrid from "./components/ProductGrid";
 import BrandStrip from "./components/BrandStrip";
 import Footer from "./components/Footer";
 import AdminPanel from "./admin/AdminPanel";
+import WishlistPage from "./Actions/WishlistPage";
+import CartPage from "./Actions/CartPage";
+import TopBar from "./components/TopBar";
+import LoginPage from "./Login/LoginPage";
+import RegisterPage from "./Login/RegisterPage";
+
+// Create a simple wrapper for your homepage content so it's clean
+const HomeContent = () => (
+  <>
+    <HeroBanner />
+    <TrendingSection />
+    <PromoBanner />
+    <ProductGrid />
+    <BrandStrip />
+  </>
+);
 
 const AppInner = () => {
   const [adminOpen, setAdminOpen] = useState(false);
@@ -27,15 +48,32 @@ const AppInner = () => {
 
   return (
     <div className="app">
+      <TopBar />
       <Navbar onAdminClick={handleAdminClick} />
-      <main>
-        <HeroBanner />
 
-        <TrendingSection />
-        <PromoBanner />
-        <ProductGrid />
-        <BrandStrip />
+      <main>
+        <Routes>
+          {/* Main Store Route */}
+          <Route path="/" element={<HomeContent />} />
+
+          {/* Wishlist Route */}
+          <Route path="/wishlist" element={<WishlistPage />} />
+
+          {/* Cart Route */}
+          <Route path="/cart" element={<CartPage />} />
+        </Routes>
+
+        <Routes>
+          {/* 2. ADD YOUR NEW ROUTES HERE */}
+
+          {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="*" element={<div>404 Not Found</div>} />
+        </Routes>
       </main>
+
       <Footer />
       {adminOpen && <AdminPanel onClose={() => setAdminOpen(false)} />}
     </div>
@@ -45,8 +83,12 @@ const AppInner = () => {
 function App() {
   return (
     <AppProvider>
-      <AppInner />
+      {/* Wrap AppInner in the Router */}
+      <Router>
+        <AppInner />
+      </Router>
     </AppProvider>
   );
 }
+
 export default App;
