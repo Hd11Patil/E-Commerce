@@ -18,6 +18,7 @@
 
 /* Logo */
 .navbar-logo {
+  margin-right: auto;
   display: flex;
   align-items: baseline;
   gap: 2px;
@@ -99,7 +100,8 @@
 
 /* Search */
 .navbar-search {
-  flex: 1;
+  margin-left: auto;
+  flex: 0.5;
   display: flex;
   align-items: center;
   background: #f5f5f5;
@@ -145,11 +147,13 @@
 
 /* Actions */
 .navbar-actions {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 2px;
   flex-shrink: 0;
 }
+
 .action-btn {
   display: flex;
   align-items: center;

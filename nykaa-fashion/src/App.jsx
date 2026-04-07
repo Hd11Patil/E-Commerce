@@ -20,7 +20,7 @@ import CartPage from "./Actions/CartPage";
 import TopBar from "./components/TopBar";
 import LoginPage from "./Login/LoginPage";
 import RegisterPage from "./Login/RegisterPage";
-
+import AccountPage from "./Account/AccountPage";
 // Create a simple wrapper for your homepage content so it's clean
 const HomeContent = () => (
   <>
@@ -55,6 +55,8 @@ const AppInner = () => {
         <Routes>
           {/* Main Store Route */}
           <Route path="/" element={<HomeContent />} />
+
+          <Route path="/account" element={<AccountPage />} />
 
           {/* Wishlist Route */}
           <Route path="/wishlist" element={<WishlistPage />} />

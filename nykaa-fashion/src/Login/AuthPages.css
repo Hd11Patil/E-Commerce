@@ -89,3 +89,40 @@
 .auth-link:hover {
   text-decoration: underline;
 }
+
+/* radio button  */
+
+/* Gender Radio Group */
+.gender-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gender-label {
+  font-size: 0.9rem;
+  color: #444;
+  font-weight: 600;
+}
+
+/* Radio options container */
+.gender-options {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Each option */
+.gender-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+}
+
+/* Radio button accent color */
+.gender-options input[type="radio"] {
+  accent-color: #fc2779;
+  cursor: pointer;
+}

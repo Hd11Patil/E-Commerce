@@ -1,5 +1,5 @@
 .topbar {
-  background-color: #f8f8f8;
+  background-color: #f3dada;
   border-bottom: 1px solid #eaeaea;
   font-family:
     system-ui,
@@ -17,56 +17,64 @@
   font-size: 0.85rem;
 }
 
+/* Left text */
 .topbar-left {
   color: #666;
   font-weight: 500;
 }
 
+/* Right side */
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 8px; /* Slightly reduced gap so the dividers fit perfectly */
+  gap: 12px;
 }
 
+/* 🔥 Button Base Style */
 .topbar-link {
   text-decoration: none;
-  color: #555;
-  transition: color 0.2s ease;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 5px 14px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
 }
 
-.topbar-link:hover {
+/* Login → Outline Button */
+.login-link {
   color: #fc2779;
+  border: 1px solid #fc2779;
+  background-color: transparent;
 }
 
-/* --- UPDATED BLUE LOGIN & REGISTER LINKS --- */
-.login-link,
+.login-link:hover {
+  background-color: #fc2779;
+  color: #fff;
+}
+
+/* Register → Filled Button */
 .register-link {
-  color: #006ebc; /* Exact blue from your image */
-  font-weight: 500;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  background-color: #fc2779;
+  color: #fff;
+  border: 1px solid #fc2779;
 }
 
-.login-link:hover,
 .register-link:hover {
-  color: #004b82; /* Slightly darker blue on hover */
-  text-decoration: underline;
+  background-color: #e01e68;
+  border-color: #e01e68;
 }
 
-/* --- UPDATED THIN GRAY DIVIDER --- */
+/* ❌ Remove divider (clean UI) */
 .topbar-divider {
-  color: #d1d1d1;
-  font-size: 1rem;
-  margin: 0 4px;
-  font-weight: 300;
+  display: none;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .hide-mobile {
     display: none;
   }
+
   .topbar-container {
     justify-content: center;
   }

@@ -73,10 +73,15 @@ const Navbar = ({ onAdminClick }) => {
 
         {/* Actions */}
         <div className="navbar-actions">
-          <button className="action-btn hide-sm">
+          {/* <button className="action-btn hide-sm">
             <span className="action-icon">👤</span>
             <span className="action-label">Account</span>
-          </button>
+          </button> */}
+
+          <Link to="/account" className="action-btn hide-sm">
+            <span className="action-icon">👤</span>
+            <span className="action-label">Account</span>
+          </Link>
 
           {/* CHANGED: Button is now a Link pointing to /wishlist */}
           <Link
@@ -90,15 +95,6 @@ const Navbar = ({ onAdminClick }) => {
               <span className="action-badge">{wishlist.length}</span>
             )}
           </Link>
-
-          {/* <button className="action-btn">
-            <span className="action-icon">🛒</span>
-            <span className="action-label hide-sm">Cart</span>
-            {cart.length > 0 && (
-              <span className="action-badge">{cart.length}</span>
-            )}
-          </button> */}
-
           <Link
             to="/cart"
             className="action-btn"

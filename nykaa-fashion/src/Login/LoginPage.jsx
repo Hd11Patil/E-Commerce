@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./AuthPages.css";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const [email, setEmail] = useState();
@@ -14,14 +15,23 @@ const LoginPage = () => {
     e.preventDefault();
     axios
       .post("http://localhost:3001/login", { email, password })
-      .then((result) => {
-        console.log(result);
-        if (result.data === "Login Successful") {
-          navigate("/");
-        }
-      })
 
-      .catch((err) => console.log(err));
+      .then(() => {
+        Swal.fire("Success!", "Login Successful 🎉", "success");
+        navigate("/login");
+      })
+      .catch(() => {
+        Swal.fire("Error!", "Something went wrong", "error");
+      });
+
+    // .then((result) => {
+    //   console.log(result);
+    //   if (result.data === "Login Successful") {
+    //     navigate("/");
+    //   }
+    // })
+
+    // .catch((err) => console.log(err));
   };
 
   return (
