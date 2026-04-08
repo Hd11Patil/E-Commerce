@@ -1,37 +1,36 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./AuthPages.css";
 import Swal from "sweetalert2";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     axios
       .post("http://localhost:3001/login", { email, password })
+      .then((res) => {
+        // ✅ Store session
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      .then(() => {
         Swal.fire("Success!", "Login Successful 🎉", "success");
-        navigate("/login");
+
+        // ✅ Redirect to account
+        navigate("/account");
       })
-      .catch(() => {
-        Swal.fire("Error!", "Something went wrong", "error");
+      .catch((err) => {
+        Swal.fire(
+          "Error!",
+          err.response?.data?.message || "Login Failed",
+          "error",
+        );
       });
-
-    // .then((result) => {
-    //   console.log(result);
-    //   if (result.data === "Login Successful") {
-    //     navigate("/");
-    //   }
-    // })
-
-    // .catch((err) => console.log(err));
   };
 
   return (
@@ -46,6 +45,7 @@ const LoginPage = () => {
           required
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -53,6 +53,7 @@ const LoginPage = () => {
           required
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <button type="submit" className="auth-btn">
           Login
         </button>

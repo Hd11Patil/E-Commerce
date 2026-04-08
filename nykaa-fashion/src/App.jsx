@@ -21,6 +21,7 @@ import TopBar from "./components/TopBar";
 import LoginPage from "./Login/LoginPage";
 import RegisterPage from "./Login/RegisterPage";
 import AccountPage from "./Account/AccountPage";
+import ProtectedRoute from "./Account/ProtectedRoute";
 // Create a simple wrapper for your homepage content so it's clean
 const HomeContent = () => (
   <>
@@ -53,25 +54,34 @@ const AppInner = () => {
 
       <main>
         <Routes>
-          {/* Main Store Route */}
+          {/* Home */}
           <Route path="/" element={<HomeContent />} />
+
+          {/* Account */}
 
           <Route path="/account" element={<AccountPage />} />
 
-          {/* Wishlist Route */}
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                {" "}
+                <AccountPage />{" "}
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Wishlist */}
           <Route path="/wishlist" element={<WishlistPage />} />
 
-          {/* Cart Route */}
+          {/* Cart */}
           <Route path="/cart" element={<CartPage />} />
-        </Routes>
 
-        <Routes>
-          {/* 2. ADD YOUR NEW ROUTES HERE */}
-
-          {/* <Route path="/" element={<Navigate to="/login" />} /> */}
-
+          {/* Auth */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+
+          {/* 404 */}
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </main>
