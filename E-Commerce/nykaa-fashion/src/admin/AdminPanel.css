@@ -1,0 +1,214 @@
+/* =========================
+   GLOBAL
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR (FIXED ISSUE HERE)
+========================= */
+.sidebar {
+  width: 220px;
+  background: #111;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+}
+
+/* TITLE */
+.sidebar h2 {
+  margin-bottom: 25px;
+  font-size: 20px;
+}
+
+/* ITEMS (IMPORTANT FIX) */
+.sidebar-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  /* 🔥 THIS FIXES YOUR ISSUE */
+  background: transparent;
+  color: #4e4d4d;   /* visible text */
+  font-weight: bold;
+}
+
+/* HOVER */
+.sidebar-item:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* ACTIVE */
+.sidebar-item.active {
+  background: #2979ff;
+  color: #fff;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* HEADER */
+  .topbar h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #000000;
+  }
+
+/* CONTENT BOX */
+.content-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+.stat-card h3 {
+  margin-top: 5px;
+  font-size: 20px;
+}
+
+/* COLORS */
+.blue { background: #2979ff; }
+.green { background: #2e7d32; }
+.gold { background: #ff9800; }
+
+/* =========================
+   TABLE
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f5f5f5;
+}
+
+td, th {
+  padding: 12px;
+  text-align: left;
+}
+
+tr {
+  border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+  background: #fafafa;
+}
+
+/* =========================
+   STATUS
+========================= */
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.processing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.delivered {
+  background: #d4edda;
+  color: #155724;
+}
+
+.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-right: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+}
+
+.deliver { background: #2e7d32; }
+.cancel { background: #e53935; }
+
+/* =========================
+   FORM
+========================= */
+.form-box input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.form-box button {
+  width: 100%;
+  padding: 10px;
+  background: #111;
+  color: white;
+  border-radius: 6px;
+  border: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .sidebar h2 {
+    display: none;
+  }
+}

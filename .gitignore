@@ -1,0 +1,9 @@
+.env
+server/.env
+frontend/.env
+node_modules
+
+node_modules/
+.env
+.cache/
+nykaa-fashion/node_modules/

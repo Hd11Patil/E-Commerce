@@ -1,0 +1,6 @@
+.promo-strip { display:grid; grid-template-columns:repeat(3,1fr); margin:16px 0; }
+.promo-tile { padding:20px 24px; text-align:center; cursor:pointer; transition:filter .2s; }
+.promo-tile:hover { filter:brightness(.96); }
+.promo-text { font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.promo-sub { font-size:12px; }
+@media(max-width:600px){ .promo-strip{grid-template-columns:1fr;} .promo-tile{padding:14px;} }

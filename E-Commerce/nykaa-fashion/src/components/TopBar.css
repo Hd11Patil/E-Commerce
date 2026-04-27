@@ -1,0 +1,81 @@
+.topbar {
+  background-color: #f3dada;
+  border-bottom: 1px solid #eaeaea;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.topbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.4rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+/* Left text */
+.topbar-left {
+  color: #666;
+  font-weight: 500;
+}
+
+/* Right side */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 🔥 Button Base Style */
+.topbar-link {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 5px 14px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+}
+
+/* Login → Outline Button */
+.login-link {
+  color: #fc2779;
+  border: 1px solid #fc2779;
+  background-color: transparent;
+}
+
+.login-link:hover {
+  background-color: #fc2779;
+  color: #fff;
+}
+
+/* Register → Filled Button */
+.register-link {
+  background-color: #fc2779;
+  color: #fff;
+  border: 1px solid #fc2779;
+}
+
+.register-link:hover {
+  background-color: #e01e68;
+  border-color: #e01e68;
+}
+
+/* ❌ Remove divider (clean UI) */
+.topbar-divider {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+
+  .topbar-container {
+    justify-content: center;
+  }
+}

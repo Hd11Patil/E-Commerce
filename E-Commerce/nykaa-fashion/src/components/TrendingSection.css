@@ -1,0 +1,116 @@
+.trending-section {
+  padding: 32px 0;
+}
+
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+.trending-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.trending-card:hover {
+  transform: translateY(-4px);
+}
+
+.trending-img {
+  border-radius: 10px;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.trending-card:hover .trending-img {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* The actual photo */
+.trending-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 10px;
+  display: block;
+}
+
+/* Dark gradient so badge text is always readable */
+.trending-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    transparent 100%
+  );
+}
+
+.trending-badge {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.badge-upto {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  align-self: center;
+  margin-bottom: 2px;
+}
+
+.badge-pct {
+  font-size: 38px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.badge-off {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.trending-label {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .trending-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .badge-pct {
+    font-size: 30px;
+  }
+}
