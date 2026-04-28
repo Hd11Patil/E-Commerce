@@ -39,18 +39,6 @@ const HomeContent = () => (
 );
 
 const AppInner = () => {
-  // const [adminOpen, setAdminOpen] = useState(false);
-  // const { isAdmin, setIsAdmin } = useApp();
-
-  // const handleAdminClick = () => {
-  //   if (isAdmin) {
-  //     setIsAdmin(false);
-  //     setAdminOpen(false);
-  //   } else {
-  //     setIsAdmin(true);
-  //     setAdminOpen(true);
-  //   }
-  // };
 
   return (
     <div className="app">

@@ -31,61 +31,7 @@ const CheckoutPage = () => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
 
-  // 🚨 PAYMENT FUNCTION WITH ALERT
-//   const handlePlaceOrder = async () => {
-//     const { name, phone, pincode, city, state, addressLine } = address;
-
-//     // ❌ Validation
-//     if (!name || !phone || !pincode || !city || !state || !addressLine) {
-//       alert("⚠️ Please fill all delivery address fields before making payment");
-//       return;
-//     }
-
-//     try {
-//       const user = JSON.parse(localStorage.getItem("user"));
-
-//        if (!user) {
-//         alert("User not logged in");
-//         return;
-//       }
-
-//     // ✅ Save order FIRST
-//     await fetch("http://localhost:3001/save-order", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         userEmail: user.email,
-//         cartItems: cartProducts,
-//         totalAmount: finalTotal,
-//         address, // ✅ include address
-//       }),
-//     });
-
-// // ----------------------
-//       const response = await fetch(
-//         "http://localhost:3001/create-checkout-session",
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ cartItems: cartProducts }),
-//         },
-//       );
-
-//       const data = await response.json();
-
-//       window.location.href = data.url;
-//     } catch (error) {
-//       console.error(error);
-//       alert("Payment failed");
-//     }
-//   };
-
-
-// new handle 
+// new handle  payment
 const handlePlaceOrder = async () => {
   const { name, phone, pincode, city, state, addressLine } = address;
 

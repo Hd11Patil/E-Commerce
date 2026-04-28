@@ -152,26 +152,7 @@ export default OrdersSection;
 
 
 // ===== TRACKING COMPONENT =====
-// function Tracking({ status }) {
-//   const steps = ["processing", "shipped", "out_for_delivery", "delivered", "cancelled"];
-//   const current = steps.indexOf(status?.toLowerCase());
 
-//   return (
-//     <div className="tracking">
-//       <div className="tracking-line"></div>
-
-//       {steps.map((step, index) => (
-//         <div key={index} className="step">
-//           <div className={`circle ${index <= current ? "active" : ""}`} />
-//           <p>{step}</p>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-
-// 0---------------------------------------
 function Tracking({ status }) {
   const steps = [
     "processing",
