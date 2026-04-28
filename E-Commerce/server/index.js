@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
-app.use(cors({ origin: "https://e-commerce-jet-seven-60.vercel.app/" }));
+app.use(cors({ origin: "https://e-commerce-jet-seven-60.vercel.app" }));
 
 // ================= STRIPE =================
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
