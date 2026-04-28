@@ -152,20 +152,68 @@ export default OrdersSection;
 
 
 // ===== TRACKING COMPONENT =====
+// function Tracking({ status }) {
+//   const steps = ["processing", "shipped", "out_for_delivery", "delivered", "cancelled"];
+//   const current = steps.indexOf(status?.toLowerCase());
+
+//   return (
+//     <div className="tracking">
+//       <div className="tracking-line"></div>
+
+//       {steps.map((step, index) => (
+//         <div key={index} className="step">
+//           <div className={`circle ${index <= current ? "active" : ""}`} />
+//           <p>{step}</p>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+
+// 0---------------------------------------
 function Tracking({ status }) {
-  const steps = ["processing", "shipped", "out for delivery", "delivered"];
-  const current = steps.indexOf(status?.toLowerCase());
+  const steps = [
+    "processing",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+  ];
+
+  const labels = {
+    processing: "Processing",
+    shipped: "Shipped",
+    out_for_delivery: "Out for Delivery",
+    delivered: "Delivered",
+    cancelled: "Cancelled",
+  };
+
+  // ❌ SPECIAL CASE: CANCELLED
+  if (status === "cancelled") {
+    return (
+      <div className="tracking cancelled-tracking">
+        <div className="step">
+          <div className="circle cancelled active" />
+          <p className="cancelled-text">Cancelled</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ NORMAL FLOW
+  const current = steps.indexOf(status);
 
   return (
     <div className="tracking">
       <div className="tracking-line"></div>
 
       {steps.map((step, index) => (
-        <div key={index} className="step">
+        <div key={step} className="step">
           <div className={`circle ${index <= current ? "active" : ""}`} />
-          <p>{step}</p>
+          <p>{labels[step]}</p>
         </div>
       ))}
     </div>
   );
 }
+

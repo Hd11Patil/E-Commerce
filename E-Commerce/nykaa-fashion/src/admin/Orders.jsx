@@ -13,15 +13,45 @@ const Orders = () => {
   useEffect(() => {
     load();
   }, []);
+const updateStatus = async (id, status) => {
+  try {
+    const res = await fetch(
+      `http://localhost:3001/admin/order-status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      }
+    );
 
-  const update = async (id, status) => {
-    await API.put(`/admin/order-status/${id}`, { status });
-    load();
-  };
+    if (!res.ok) {
+      alert("❌ Failed");
+      return;
+    }
+
+    // 🔥 MAIN CHANGE → instant UI update
+    setOrders((prev) =>
+      prev.map((o) =>
+        o._id === id ? { ...o, deliveryStatus: status } : o
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+  }
+};
+
+
+
 
   const getStatusClass = (status) => {
     if (status === "delivered") return "status delivered";
     if (status === "cancelled") return "status cancelled";
+    if (status ===  "out-delivery") return "status out_for_delivery";
+    if (status === "shipped") return "status shipped";
     return "status processing";
   };
 
@@ -51,15 +81,36 @@ const Orders = () => {
 
               <td>
                 <button
+                  className="btn processing"
+                  onClick={() => updateStatus(o._id, "processing")}
+                >
+                  Processing
+                </button>
+
+                <button
+                  className="btn shipped"
+                  onClick={() => updateStatus(o._id, "shipped")}
+                >
+                  Shipped
+                </button>
+
+                <button
+                  className="btn out"
+                  onClick={() => updateStatus(o._id, "out_for_delivery")}
+                >
+                  Out for Delivery
+                </button>
+
+                <button
                   className="btn deliver"
-                  onClick={() => update(o._id, "delivered")}
+                  onClick={() => updateStatus(o._id, "delivered")}
                 >
                   Deliver
                 </button>
 
                 <button
                   className="btn cancel"
-                  onClick={() => update(o._id, "cancelled")}
+                  onClick={() => updateStatus(o._id, "cancelled")}
                 >
                   Cancel
                 </button>

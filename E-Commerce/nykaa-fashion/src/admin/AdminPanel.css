@@ -173,6 +173,9 @@ tr:hover {
 
 .deliver { background: #2e7d32; }
 .cancel { background: #e53935; }
+.processing { background: #81f504; }
+.shipped { background: #731eeb; }
+.out { background: #141ff0; }
 
 /* =========================
    FORM
@@ -211,4 +214,29 @@ tr:hover {
   .sidebar h2 {
     display: none;
   }
+}
+
+
+/* -----------------------------traking css */
+
+/* Cancel state */
+.cancelled {
+  background-color: red !important;
+}
+
+.cancelled-text {
+  color: red;
+  font-weight: bold;
+}
+
+/* Optional: center cancelled UI */
+.cancelled-tracking {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Optional: grey out line if needed */
+.tracking-line {
+  background: #ddd;
 }
