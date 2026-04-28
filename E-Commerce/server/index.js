@@ -9,6 +9,10 @@ const Order = require("./models/Order");
 
 const app = express();
 
+app.get("/", (req, res) => {
+  res.send("Backend is Running");
+})
+
 // ================= MIDDLEWARE =================
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
@@ -258,5 +262,6 @@ app.put("/admin/order-status/:id", async (req, res) => {
 });
 
 // ================= SERVER =================
-const PORT = 3001;
+// const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
