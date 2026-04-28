@@ -189,15 +189,25 @@ app.get("/get-orders/:email", async (req, res) => {
 // ================= CANCEL ORDER =================
 app.put("/cancel-order/:id", async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
+    const order = await Order.findById(
       req.params.id,
-      { deliveryStatus: "cancelled" },
-      { new: true },
+      // { deliveryStatus: "cancelled" },
+      // { new: true },
     );
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+
+    if(order.deliveryStatus !== "processing"){
+      return res.status(400).json({
+        message:"Order can not be Canceld after shipping",
+      });
+    }
+
+    order.deliveryStatus = "cancelled";
+    await order.save();
 
     res.json({ success: true, order });
   } catch (err) {

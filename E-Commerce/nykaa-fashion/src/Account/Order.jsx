@@ -48,7 +48,13 @@ function OrdersSection({ activeSection }) {
         method: "PUT",
       });
 
-      if (!res.ok) return alert("Failed to cancel order");
+      const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message); // 👈 show backend message
+      return;
+    }
+      
 
       alert("Order Cancelled");
       fetchOrders();
@@ -91,7 +97,7 @@ function OrdersSection({ activeSection }) {
             </div>
 
             <div className="order-actions">
-              {order.deliveryStatus !== "cancelled" && (
+              {order.deliveryStatus === "processing" && (
                 <button
                   className="cancel-btn"
                   onClick={() => cancelOrder(order._id)}
