@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "https://e-commerce-jet-seven-60.vercel.app/" }));
 
 // ================= STRIPE =================
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -99,8 +99,8 @@ app.post("/create-checkout-session", async (req, res) => {
         quantity: 1,
       })),
       mode: "payment",
-      success_url: "http://localhost:3000/success",
-      cancel_url: "http://localhost:3000/cancel",
+      success_url: "https://e-commerce-jet-seven-60.vercel.app/success",
+      cancel_url: "https://e-commerce-jet-seven-60.vercel.app/cancel",
     });
 
     res.json({ url: session.url });
@@ -111,34 +111,6 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 // ================= SAVE ORDER =================
-// app.post("/save-order", async (req, res) => {
-//   try {
-//     const { userEmail, cartItems, totalAmount, address, phone } = req.body;
-
-//     const items = cartItems.map((item) => ({
-//       productId: item.id,
-//       name: item.name,
-//       price: item.price,
-//       quantity: item.quantity || 1,
-//     }));
-
-//     const order = await Order.create({
-//       userEmail,
-//       items,
-//       totalAmount,
-//       address,
-//       phone,
-//       paymentStatus: "paid",
-//       deliveryStatus: "processing",
-//     });
-
-//     res.json({ success: true, order });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
 
 app.post("/save-order", async (req, res) => {
   try {

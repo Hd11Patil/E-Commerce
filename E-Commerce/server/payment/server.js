@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://e-commerce-jet-seven-60.vercel.app/",
   }),
 );
 app.use(express.json());
@@ -46,8 +46,8 @@ app.post("/create-checkout-session", async (req, res) => {
 
       mode: "payment",
 
-      success_url: "http://localhost:3000/success",
-      cancel_url: "http://localhost:3000/cancel",
+      success_url: "https://e-commerce-jet-seven-60.vercel.app/success",
+      cancel_url: "https://e-commerce-jet-seven-60.vercel.app/cancel",
     });
 
     console.log("Stripe session created:", session.id);
