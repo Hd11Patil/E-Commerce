@@ -42,7 +42,7 @@ const handlePlaceOrder = async () => {
 
   try {
     const response = await fetch(
-      "http://localhost:3001/create-checkout-session",
+      "https://e-commerce-bfn8.onrender.com/create-checkout-session",
       {
         method: "POST",
         headers: {

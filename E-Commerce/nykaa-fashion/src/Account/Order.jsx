@@ -25,7 +25,7 @@ function OrdersSection({ activeSection }) {
       if (!user || !user.email) return setOrders([]);
 
       const res = await fetch(
-        `http://localhost:3001/get-orders/${encodeURIComponent(user.email)}`
+        `https://e-commerce-bfn8.onrender.com/get-orders/${encodeURIComponent(user.email)}`
       );
 
       const data = await res.json();
@@ -44,7 +44,7 @@ function OrdersSection({ activeSection }) {
 
   const cancelOrder = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3001/cancel-order/${id}`, {
+      const res = await fetch(`https://e-commerce-bfn8.onrender.com/cancel-order/${id}`, {
         method: "PUT",
       });
 

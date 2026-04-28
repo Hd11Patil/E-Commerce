@@ -24,7 +24,7 @@ const RegisterPage = () => {
     }
 
     axios
-      .post("http://localhost:3001/register", {
+      .post("https://e-commerce-bfn8.onrender.com/", {
         name,
         email,
         password,

@@ -16,7 +16,7 @@ const Orders = () => {
 const updateStatus = async (id, status) => {
   try {
     const res = await fetch(
-      `http://localhost:3001/admin/order-status/${id}`,
+      `https://e-commerce-bfn8.onrender.com/admin/order-status/${id}`,
       {
         method: "PUT",
         headers: {

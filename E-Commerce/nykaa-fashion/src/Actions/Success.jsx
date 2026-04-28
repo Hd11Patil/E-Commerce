@@ -25,7 +25,7 @@ const Success = () => {
           0
         );
 
-        await fetch("http://localhost:3001/save-order", {
+        await fetch("https://e-commerce-bfn8.onrender.com/save-order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
