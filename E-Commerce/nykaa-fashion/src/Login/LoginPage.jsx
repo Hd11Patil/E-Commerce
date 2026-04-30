@@ -13,7 +13,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     axios
-      .post("https://e-commerce-bfn8.onrender.com/", { email, password })
+      .post("https://e-commerce-bfn8.onrender.com/login", { email, password })
       .then((res) => {
         // ✅ Store session
         localStorage.setItem("token", res.data.token);
