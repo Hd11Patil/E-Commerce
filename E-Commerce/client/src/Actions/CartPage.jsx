@@ -1,5 +1,6 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useApp } from "../context/AppContext";
 import CheckoutSummary from "./CheckoutSummary";
 import "./CartPage.css";
@@ -35,13 +36,11 @@ const CartPage = () => {
     removeFromSavedForLater,
   } = useApp();
 
-  // ================= STATE (MUST BE FIRST) =================
-  const [couponCode, setCouponCode] = React.useState("");
-  const [discountPercent, setDiscountPercent] = React.useState(0);
-
   // ================= DATA =================
   const cartProducts = products.filter((p) => cart.includes(p.id));
-  const savedProducts = products.filter((p) => savedForLater.includes(p.id));
+  const savedProducts = products.filter((p) =>
+    savedForLater.includes(p.id)
+  );
 
   const totalMRP = cartProducts.reduce(
     (sum, item) => sum + item.originalPrice,
@@ -58,23 +57,55 @@ const CartPage = () => {
     0
   );
 
-  const couponDiscount = (baseTotal * discountPercent) / 100;
-  const finalTotal = baseTotal - couponDiscount;
+  // ================= STATE =================
+  const [couponCode, setCouponCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [finalTotal, setFinalTotal] = useState(baseTotal);
 
-  // ================= COUPON LOGIC =================
-  const applyCoupon = (code) => {
-    const c = code.trim().toUpperCase();
+  // ================= COUPON =================
+  const applyCoupon = async (code) => {
+    try {
+      const res = await axios.post("http://localhost:3001/apply-coupon", {
+        code,
+        cartTotal: baseTotal,
+      });
 
-    if (c === "SAVE10") {
-      setDiscountPercent(10);
-    } else if (c === "SAVE20") {
-      setDiscountPercent(20);
-    } else if (c === "WELCOME5") {
-      setDiscountPercent(5);
-    } else {
-      setDiscountPercent(0);
-      alert("Invalid Coupon Code");
+      if (res.data.success) {
+        setDiscountAmount(res.data.discountAmount);
+        setFinalTotal(res.data.finalAmount);
+      } else {
+        setDiscountAmount(0);
+        setFinalTotal(baseTotal);
+        alert(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  // update total when cart changes
+  useEffect(() => {
+    setFinalTotal(baseTotal);
+  }, [baseTotal]);
+
+  // reset coupon if cart changes
+  useEffect(() => {
+    setDiscountAmount(0);
+    setFinalTotal(baseTotal);
+    setCouponCode("");
+  }, [cart]);
+
+  // ✅ NEW: HANDLE CHECKOUT WITH DATA
+  const handleCheckout = () => {
+    navigate("/checkout", {
+      state: {
+        cartProducts,
+        baseTotal,
+        finalTotal,
+        discountAmount,
+        couponCode,
+      },
+    });
   };
 
   return (
@@ -82,7 +113,8 @@ const CartPage = () => {
       <header className="cart-header">
         <h1>Shopping Bag</h1>
         <span className="item-count">
-          {cartProducts.length} {cartProducts.length === 1 ? "Item" : "Items"}
+          {cartProducts.length}{" "}
+          {cartProducts.length === 1 ? "Item" : "Items"}
         </span>
       </header>
 
@@ -90,108 +122,49 @@ const CartPage = () => {
         <div className="empty-cart">
           <div className="empty-icon">🛒</div>
           <h2>Your shopping bag is empty</h2>
-          <p>Let's add some items to your cart to get started.</p>
           <Link to="/">
-            <button className="continue-shopping-btn">Start Shopping</button>
+            <button className="continue-shopping-btn">
+              Start Shopping
+            </button>
           </Link>
         </div>
       ) : (
         <div className="cart-container">
           <div className="cart-items-section">
-
-            {/* CART ITEMS */}
             {cartProducts.map((p) => (
               <div key={p.id} className="cart-item-card">
-                <img
-                  src={getImage(p.id)}
-                  alt={p.name}
-                  className="cart-item-image"
-                />
+                <img src={getImage(p.id)} alt={p.name} />
 
                 <div className="cart-item-details">
-                  <p className="item-brand">{p.brand}</p>
-                  <h3 className="item-name">{p.name}</h3>
-                  <div className="item-price-row">
-                    <span className="item-price">₹{p.price}</span>
-                    <span className="item-original-price">
-                      ₹{p.originalPrice}
-                    </span>
-                    <span className="item-discount">{p.discount}% off</span>
+                  <p>{p.brand}</p>
+                  <h3>{p.name}</h3>
+                  <div>
+                    ₹{p.price} <del>₹{p.originalPrice}</del>
                   </div>
                 </div>
 
-                <div className="cart-item-actions">
-                  <button
-                    className="text-action-btn cart-remove-btn"
-                    onClick={() => removeFromCart(p.id)}
-                  >
+                <div>
+                  <button onClick={() => removeFromCart(p.id)}>
                     Remove
                   </button>
-
-                  <span className="action-divider">|</span>
-
-                  <button
-                    className="text-action-btn save-btn"
-                    onClick={() => moveToSavedForLater(p.id)}
-                  >
-                    Save for Later
+                  <button onClick={() => moveToSavedForLater(p.id)}>
+                    Save
                   </button>
                 </div>
               </div>
             ))}
-
-            {/* SAVED ITEMS */}
-            {savedProducts.length > 0 && (
-              <div className="saved-for-later-section">
-                <h3>Saved for Later ({savedProducts.length})</h3>
-
-                {savedProducts.map((p) => (
-                  <div key={p.id} className="cart-item-card saved-card">
-                    <img src={getImage(p.id)} alt={p.name} />
-
-                    <div className="cart-item-details">
-                      <p className="item-brand">{p.brand}</p>
-                      <h3 className="item-name">{p.name}</h3>
-                      <div className="item-price-row">
-                        <span className="item-price">₹{p.price}</span>
-                      </div>
-                    </div>
-
-                    <div className="cart-item-actions">
-                      <button
-                        className="text-action-btn"
-                        onClick={() => removeFromSavedForLater(p.id)}
-                      >
-                        Remove
-                      </button>
-
-                      <span className="action-divider">|</span>
-
-                      <button
-                        className="text-action-btn"
-                        onClick={() => moveSavedToCart(p.id)}
-                      >
-                        Move to Cart
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* SUMMARY */}
-          {cartProducts.length > 0 && (
-            <CheckoutSummary
-              totalMRP={totalMRP}
-              totalDiscount={totalDiscount}
-              finalTotal={finalTotal}
-              couponCode={couponCode}
-              setCouponCode={setCouponCode}
-              applyCoupon={applyCoupon}
-              discountPercent={discountPercent}
-            />
-          )}
+          <CheckoutSummary
+            totalMRP={totalMRP}
+            totalDiscount={totalDiscount}
+            finalTotal={finalTotal}
+            couponCode={couponCode}
+            setCouponCode={setCouponCode}
+            applyCoupon={applyCoupon}
+            discountAmount={discountAmount}
+            handleCheckout={handleCheckout} // ✅ PASS THIS
+          />
         </div>
       )}
     </div>

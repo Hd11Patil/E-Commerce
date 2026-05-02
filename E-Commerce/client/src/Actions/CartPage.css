@@ -340,15 +340,16 @@
 }
 
 /* ----------------------------coupon styles ---------------------------- */
-/* MAIN WRAPPER */
+/* ---------------- COUPON SECTION ---------------- */
+
 .coupon-box {
   display: flex;
-  align-items: stretch;
+  align-items: center;              /* ✅ FIXED */
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   background: #fff;
-  transition: 0.2s;
+  height: 42px;                    /* control overall height */
 }
 
 /* INPUT */
@@ -356,43 +357,41 @@
   flex: 1;
   border: none;
   outline: none;
-  padding: 10px 10px;
-  font-size: 14px; /* increase this */
-   height: 40px;          /* 👈 important */
-  line-height: 40px; 
+  padding: 0 12px;                 /* ✅ no vertical padding */
+  font-size: 14px;
+  height: 100%;                    /* fill parent */
   background: transparent;
 }
 
-/* 👇 add this */
+/* PLACEHOLDER */
 .coupon-input::placeholder {
   font-size: 14px;
-  color: #999; /* optional but improves visibility */
+  color: #999;
 }
 
-/* FOCUS EFFECT (PRO LEVEL TOUCH) */
-.coupon-box:focus-within {
-  border-color: #ff3e6c;
-  box-shadow: 0 0 0 2px rgba(255, 62, 108, 0.15);
-}
-
-/* BUTTON INSIDE */
+/* BUTTON */
 .coupon-btn {
+  height: 100%;                    /* match input */
   padding: 0 18px;
   background: #ff3e6c;
   color: white;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
-
 .coupon-btn:hover {
   background: #e7335f;
+}
+
+/* FOCUS EFFECT */
+.coupon-box:focus-within {
+  border-color: #ff3e6c;
+  box-shadow: 0 0 0 2px rgba(255, 62, 108, 0.15);
 }
 
 /* SUCCESS TEXT */

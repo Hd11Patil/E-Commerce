@@ -9,16 +9,24 @@ const CheckoutSummary = ({
   couponCode,
   setCouponCode,
   applyCoupon,
-  discountPercent,
+  discountAmount,
+   handleCheckout,
 }) => {
   const navigate = useNavigate();
+
+  const handleApply = () => {
+    if (!couponCode.trim()) {
+      alert("Please enter a coupon code");
+      return;
+    }
+    applyCoupon(couponCode);
+  };
 
   return (
     <div className="cart-summary-section">
       <h3>Price Details</h3>
 
       {/* COUPON SECTION */}
-
       <div className="coupon-section">
         <div className="coupon-box">
           <input
@@ -27,19 +35,21 @@ const CheckoutSummary = ({
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value)}
             className="coupon-input"
+            disabled={discountAmount > 0} // ✅ lock after apply
           />
 
           <button
-            onClick={() => applyCoupon(couponCode)}
-          className="coupon-btn" 
+            onClick={handleApply}
+            className="coupon-btn"
+            disabled={discountAmount > 0} // ✅ prevent multiple apply
           >
             Apply
           </button>
         </div>
 
-        {discountPercent > 0 && (
+        {discountAmount > 0 && (
           <p className="coupon-success">
-            🎉 {discountPercent}% Discount Applied
+            🎉 ₹{discountAmount.toLocaleString()} Discount Applied
           </p>
         )}
       </div>
@@ -55,16 +65,10 @@ const CheckoutSummary = ({
       </div>
 
       {/* COUPON DISCOUNT */}
-      {discountPercent > 0 && (
+      {discountAmount > 0 && (
         <div className="summary-row discount-row">
-          <span>Coupon Discount ({discountPercent}%)</span>
-          <span>
-            - ₹
-            {(
-              (finalTotal * discountPercent) /
-              (100 - discountPercent)
-            ).toLocaleString()}
-          </span>
+          <span>Coupon Discount</span>
+          <span>- ₹{discountAmount.toLocaleString()}</span>
         </div>
       )}
 
@@ -80,7 +84,7 @@ const CheckoutSummary = ({
         <span>₹{finalTotal.toLocaleString()}</span>
       </div>
 
-      <button className="checkout-btn" onClick={() => navigate("/checkout")}>
+       <button className="checkout-btn" onClick={handleCheckout}>
         Proceed to Checkout
       </button>
     </div>

@@ -5,8 +5,9 @@ import Dashboard from "./Dashboard";
 import Orders from "./Orders";
 import Products from "./Products";
 import AddProduct from "./AddProduct";
+import AdminCoupon from "./AdminCoupon";
 
-const TABS = ["Dashboard", "Orders", "Products", "Add Product"];
+const TABS = ["Dashboard", "Orders", "Products", "Add Product", "Admin Coupon"];
 
 const AdminPanel = () => {
   const [tab, setTab] = useState("Dashboard");
@@ -21,6 +22,8 @@ const AdminPanel = () => {
         return <Products />;
       case "Add Product":
         return <AddProduct />;
+      case "Admin Coupon":
+        return <AdminCoupon />;
       default:
         return <Dashboard />;
     }

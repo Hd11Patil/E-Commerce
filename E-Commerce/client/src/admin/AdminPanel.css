@@ -240,3 +240,107 @@ tr:hover {
 .tracking-line {
   background: #ddd;
 }
+
+
+/* --------------- ADDMIN COU[ON CSS ----------------------------- */
+
+
+/* PAGE */
+.admin-coupon-page {
+  padding: 20px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+/* TITLE */
+.admin-coupon-title {
+  font-size: 24px;
+  font-weight: 600;
+  background: #f8d7da;
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* CARD */
+.coupon-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 700px;
+}
+
+/* HEADING */
+.coupon-card h2 {
+  margin-bottom: 20px;
+}
+
+/* FORM GROUP */
+.coupon-form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* LABEL */
+.coupon-form-group label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* INPUT */
+.coupon-input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.coupon-input:focus {
+  border-color: #ff3f6c;
+  box-shadow: 0 0 0 2px rgba(255, 63, 108, 0.1);
+}
+
+/* SELECT */
+.coupon-select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* DATE */
+.coupon-date {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* BUTTON */
+.coupon-btn-submit {
+  margin-top: 15px;
+  padding: 12px;
+  background: #ff3f6c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.coupon-btn-submit:hover {
+  background: #e7335e;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .coupon-card {
+    padding: 15px;
+  }
+}

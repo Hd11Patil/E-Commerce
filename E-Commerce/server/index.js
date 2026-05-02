@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const Stripe = require("stripe");
 require("dotenv").config();
-
+const Coupon = require("./models/Coupon");
 const EmployeeModel = require("./models/Employee");
 const Order = require("./models/Order");
 
@@ -25,7 +25,7 @@ app.use(
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  })
+  }),
 );
 
 // ✅ Handle preflight requests (VERY IMPORTANT)
@@ -125,10 +125,103 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+// =================Coupon Logic=====================
+
+app.post("/apply-coupon", async (req, res) => {
+  const { code, cartTotal } = req.body;
+
+  const coupon = await Coupon.findOne({ code });
+
+  if (!coupon) {
+    return res.json({ success: false, message: "Invalid coupon" });
+  }
+
+  if (coupon.expiry < new Date()) {
+    return res.json({ success: false, message: "Coupon expired" });
+  }
+
+  if (cartTotal < coupon.minAmount) {
+    return res.json({ success: false, message: "Minimum amount not met" });
+  }
+
+  let discountAmount = 0;
+
+  if (coupon.type === "percentage") {
+    discountAmount = (cartTotal * coupon.discount) / 100;
+  } else {
+    discountAmount = coupon.discount;
+  }
+
+  res.json({
+    success: true,
+    discountAmount,
+    finalAmount: cartTotal - discountAmount,
+  });
+});
+
+// ================= ADMIN ADD COUPON =================
+app.post("/admin/add-coupon", async (req, res) => {
+  try {
+    let { code, discount, type, expiry, minAmount } = req.body;
+
+    // ================= VALIDATION =================
+    if (!code || !discount || !type) {
+      return res.json({ success: false, message: "Missing required fields" });
+    }
+
+    // Normalize values
+    code = code.trim().toUpperCase();
+    discount = Number(discount);
+    minAmount = Number(minAmount) || 0;
+
+    // Validate type
+    if (!["percentage", "fixed"].includes(type)) {
+      return res.json({ success: false, message: "Invalid coupon type" });
+    }
+
+    // Validate discount
+    if (discount <= 0) {
+      return res.json({ success: false, message: "Invalid discount value" });
+    }
+
+    if (type === "percentage" && discount > 100) {
+      return res.json({ success: false, message: "Max 100% allowed" });
+    }
+
+    // Validate expiry
+    if (expiry && new Date(expiry) < new Date()) {
+      return res.json({ success: false, message: "Expiry must be future date" });
+    }
+
+    // ================= CHECK EXISTING =================
+    const existing = await Coupon.findOne({ code });
+
+    if (existing) {
+      return res.json({ success: false, message: "Coupon already exists" });
+    }
+
+    // ================= CREATE =================
+    const coupon = await Coupon.create({
+      code,
+      discount,
+      type,
+      expiry,
+      minAmount,
+    });
+
+    res.json({ success: true, coupon });
+
+  } catch (err) {
+    console.error("ADD COUPON ERROR:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 // ================= SAVE ORDER =================
 app.post("/save-order", async (req, res) => {
   try {
-    const { userEmail, cartItems, totalAmount, address, phone } = req.body;
+    const { userEmail, cartItems, totalAmount, couponCode, address, phone } =
+      req.body;
 
     if (!userEmail || !cartItems || !totalAmount) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -141,10 +234,30 @@ app.post("/save-order", async (req, res) => {
       quantity: item.quantity || 1,
     }));
 
+    let discount = 0;
+    let finalPrice = totalAmount;
+
+    if (couponCode) {
+      const coupon = await Coupon.findOne({ code: couponCode });
+
+      if (coupon && coupon.expiry > new Date()) {
+        if (coupon.type === "percentage") {
+          discount = (totalAmount * coupon.discount) / 100;
+        } else {
+          discount = coupon.discount;
+        }
+
+        finalPrice = totalAmount - discount;
+      }
+    }
+
     const order = await Order.create({
       userEmail,
       items,
       totalAmount,
+      discountAmount: discount,
+      finalAmount: finalPrice,
+      couponCode: couponCode || null,
       address,
       phone,
     });
@@ -155,7 +268,6 @@ app.post("/save-order", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 // ================= GET USER ORDERS =================
 app.get("/get-orders/:email", async (req, res) => {
   try {
@@ -226,7 +338,7 @@ app.put("/admin/order-status/:id", async (req, res) => {
     const order = await Order.findByIdAndUpdate(
       req.params.id,
       { deliveryStatus: req.body.status },
-      { new: true }
+      { new: true },
     );
 
     res.json(order);
