@@ -32,15 +32,10 @@ const CartPage = () => {
     removeFromCart,
     savedForLater,
     moveToSavedForLater,
-    moveSavedToCart,
-    removeFromSavedForLater,
   } = useApp();
 
   // ================= DATA =================
   const cartProducts = products.filter((p) => cart.includes(p.id));
-  const savedProducts = products.filter((p) =>
-    savedForLater.includes(p.id)
-  );
 
   const totalMRP = cartProducts.reduce(
     (sum, item) => sum + item.originalPrice,
@@ -60,7 +55,7 @@ const CartPage = () => {
   // ================= STATE =================
   const [couponCode, setCouponCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
-  const [finalTotal, setFinalTotal] = useState(baseTotal);
+  const [finalTotal, setFinalTotal] = useState(0);
 
   // ================= COUPON =================
   const applyCoupon = async (code) => {
@@ -83,19 +78,22 @@ const CartPage = () => {
     }
   };
 
-  // update total when cart changes
+  // ✅ Always sync total correctly
   useEffect(() => {
-    setFinalTotal(baseTotal);
-  }, [baseTotal]);
+    if (discountAmount > 0) {
+      setFinalTotal(baseTotal - discountAmount);
+    } else {
+      setFinalTotal(baseTotal);
+    }
+  }, [baseTotal, discountAmount]);
 
   // reset coupon if cart changes
   useEffect(() => {
     setDiscountAmount(0);
-    setFinalTotal(baseTotal);
     setCouponCode("");
   }, [cart]);
 
-  // ✅ NEW: HANDLE CHECKOUT WITH DATA
+  // ✅ IMPORTANT: PASS EVERYTHING TO CHECKOUT
   const handleCheckout = () => {
     navigate("/checkout", {
       state: {
@@ -118,9 +116,8 @@ const CartPage = () => {
         </span>
       </header>
 
-      {cartProducts.length === 0 && savedProducts.length === 0 ? (
+      {cartProducts.length === 0 ? (
         <div className="empty-cart">
-          <div className="empty-icon">🛒</div>
           <h2>Your shopping bag is empty</h2>
           <Link to="/">
             <button className="continue-shopping-btn">
@@ -163,7 +160,7 @@ const CartPage = () => {
             setCouponCode={setCouponCode}
             applyCoupon={applyCoupon}
             discountAmount={discountAmount}
-            handleCheckout={handleCheckout} // ✅ PASS THIS
+            handleCheckout={handleCheckout} // ✅ THIS IS CRITICAL
           />
         </div>
       )}

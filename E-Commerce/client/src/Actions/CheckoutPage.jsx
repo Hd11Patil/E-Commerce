@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useApp } from "../context/AppContext";
+import { useLocation } from "react-router-dom";
 import "./CheckoutPage.css";
 
 const PRODUCT_IMAGES = {
@@ -13,10 +14,24 @@ const getImage = (id) => PRODUCT_IMAGES[id] || PRODUCT_IMAGES[1];
 
 const CheckoutPage = () => {
   const { products, cart } = useApp();
+  const location = useLocation();
 
-  const cartProducts = products.filter((p) => cart.includes(p.id));
+  // ✅ GET DATA FROM CART PAGE
+  const {
+    cartProducts: passedCartProducts,
+    finalTotal: passedFinalTotal,
+    discountAmount,
+    couponCode,
+  } = location.state || {};
 
-  // manual address (fallback)
+  // fallback (if user refresh)
+  const cartProducts =
+    passedCartProducts || products.filter((p) => cart.includes(p.id));
+
+  const finalTotal =
+    passedFinalTotal || cartProducts.reduce((sum, item) => sum + item.price, 0);
+
+  // ================= ADDRESS =================
   const [address, setAddress] = useState({
     name: "",
     phone: "",
@@ -26,11 +41,9 @@ const CheckoutPage = () => {
     addressLine: "",
   });
 
-  // saved addresses
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  // load saved addresses
   useEffect(() => {
     const raw = localStorage.getItem("user_addresses");
     const parsed = raw ? JSON.parse(raw) : [];
@@ -45,64 +58,122 @@ const CheckoutPage = () => {
 
   const handleSelectAddress = (addr) => {
     setSelectedAddress(addr);
-    setAddress(addr); // auto fill form
+    setAddress(addr);
     localStorage.setItem("selected_address", JSON.stringify(addr));
   };
 
-  const finalTotal = cartProducts.reduce((sum, item) => sum + item.price, 0);
-
   const handleChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
-    setSelectedAddress(null); // switching to manual mode
+    setSelectedAddress(null);
   };
+
+  // ================= PAYMENT =================
+  // const handlePlaceOrder = async () => {
+  //   const finalAddress = selectedAddress || address;
+
+  //   const { name, phone, pincode, city, state, addressLine } = finalAddress;
+
+  //   if (!name || !phone || !pincode || !city || !state || !addressLine) {
+  //     alert("⚠️ Select or fill address");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       "https://e-commerce-bfn8.onrender.com/create-checkout-session",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           cartItems: cartProducts,
+  //           totalAmount: cartProducts.reduce(
+  //             (sum, item) => sum + item.price,
+  //             0,
+  //           ), 
+  //           discountAmount,
+  //           couponCode,
+  //         }),
+  //       },
+  //     );
+
+  //     const data = await response.json();
+
+  //     localStorage.setItem("order_address", JSON.stringify(finalAddress));
+
+  //     window.location.href = data.url;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
 
   const handlePlaceOrder = async () => {
-    const finalAddress = selectedAddress || address;
+  const finalAddress = selectedAddress || address;
 
-    const { name, phone, pincode, city, state, addressLine } = finalAddress;
+  const { name, phone, pincode, city, state, addressLine } = finalAddress;
 
-    if (!name || !phone || !pincode || !city || !state || !addressLine) {
-      alert("⚠️ Select or fill address");
-      return;
-    }
+  if (!name || !phone || !pincode || !city || !state || !addressLine) {
+    alert("⚠️ Select or fill address");
+    return;
+  }
 
-    try {
-      const response = await fetch(
-        "https://e-commerce-bfn8.onrender.com/create-checkout-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ cartItems: cartProducts }),
-        }
-      );
+  try {
+    // 🔥 ORIGINAL TOTAL (without coupon)
+    const originalTotal = cartProducts.reduce(
+      (sum, item) => sum + item.price,
+      0
+    );
 
-      const data = await response.json();
+    // ✅ SAVE FULL ORDER DATA (VERY IMPORTANT)
+    localStorage.setItem(
+      "order_summary",
+      JSON.stringify({
+        totalAmount: originalTotal,
+        finalAmount: finalTotal,
+        discountAmount,
+        couponCode,
+      })
+    );
 
-      localStorage.setItem("order_address", JSON.stringify(finalAddress));
+    const response = await fetch(
+      "https://e-commerce-bfn8.onrender.com/create-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartItems: cartProducts,
+          totalAmount: originalTotal, // ✅ ORIGINAL
+          couponCode, // ✅ IMPORTANT
+        }),
+      }
+    );
 
-      window.location.href = data.url;
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    const data = await response.json();
 
+    localStorage.setItem("order_address", JSON.stringify(finalAddress));
+
+    window.location.href = data.url;
+  } catch (err) {
+    console.error(err);
+  }
+};
   return (
     <div className="checkout-page">
       <h1 className="checkout-title">Checkout</h1>
 
       <div className="checkout-container">
-        {/* LEFT SIDE */}
+        {/* LEFT */}
         <div className="checkout-left">
-          {/* ORDER ITEMS */}
           <div className="card">
             <h3>Order Items</h3>
 
             {cartProducts.map((p) => (
               <div key={p.id} className="checkout-item">
                 <img src={getImage(p.id)} alt={p.name} />
-
                 <div className="item-info">
                   <p className="item-name">{p.name}</p>
                   <p className="item-price">₹{p.price}</p>
@@ -111,11 +182,9 @@ const CheckoutPage = () => {
             ))}
           </div>
 
-          {/* ADDRESS SECTION */}
           <div className="card">
             <h3>Delivery Address</h3>
 
-            {/* SAVED ADDRESSES */}
             {savedAddresses.length > 0 && (
               <div style={{ marginBottom: "15px" }}>
                 {savedAddresses.map((addr) => (
@@ -143,7 +212,6 @@ const CheckoutPage = () => {
               </div>
             )}
 
-            {/* INPUT FORM */}
             <div className="form-grid">
               <input
                 name="name"
@@ -186,7 +254,7 @@ const CheckoutPage = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* RIGHT */}
         <div className="checkout-right card">
           <h3>Price Summary</h3>
 
@@ -199,6 +267,14 @@ const CheckoutPage = () => {
             <span>Total Price</span>
             <span>₹{finalTotal}</span>
           </div>
+
+          {/* ✅ SHOW COUPON */}
+          {discountAmount > 0 && (
+            <div className="summary-row" style={{ color: "green" }}>
+              <span>Coupon Applied ({couponCode})</span>
+              <span>- ₹{discountAmount}</span>
+            </div>
+          )}
 
           <button className="place-order-btn" onClick={handlePlaceOrder}>
             Make Payment

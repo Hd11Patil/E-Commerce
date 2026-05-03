@@ -104,23 +104,16 @@ export const AppProvider = ({ children }) => {
     },
   ]);
 
-  // ================= PRODUCT CRUD (🔥 FIX) =================
-
-  // ADD PRODUCT
+  // ================= PRODUCT CRUD =================
   const addProduct = (product) => {
-    const newProduct = {
-      ...product,
-      id: Date.now(),
-    };
+    const newProduct = { ...product, id: Date.now() };
     setProducts((prev) => [...prev, newProduct]);
   };
 
-  // DELETE PRODUCT
   const deleteProduct = (id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
   };
 
-  // UPDATE PRODUCT (🔥 YOUR ERROR FIXED HERE)
   const updateProduct = (id, updatedData) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -131,11 +124,21 @@ export const AppProvider = ({ children }) => {
 
   // ================= ORDERS =================
   const [orders] = useState([]);
-
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // ================= LOCAL STORAGE =================
+  // ================= 🔥 COUPON (NEW) =================
+  const [coupon, setCoupon] = useState(() => {
+    const saved = localStorage.getItem("tecygig_coupon");
+    return saved
+      ? JSON.parse(saved)
+      : { code: "", discountAmount: 0, finalTotal: 0 };
+  });
 
+  useEffect(() => {
+    localStorage.setItem("tecygig_coupon", JSON.stringify(coupon));
+  }, [coupon]);
+
+  // ================= LOCAL STORAGE =================
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem("tecygig_wishlist");
     return saved ? JSON.parse(saved) : [];
@@ -163,8 +166,7 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("tecygig_saved", JSON.stringify(savedForLater));
   }, [savedForLater]);
 
-  // ================= CART + WISHLIST =================
-
+  // ================= CART =================
   const toggleWishlist = (id) =>
     setWishlist((w) =>
       w.includes(id) ? w.filter((x) => x !== id) : [...w, id]
@@ -179,10 +181,12 @@ export const AppProvider = ({ children }) => {
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("tecygig_cart");
+
+    // 🔥 RESET COUPON WHEN CART CLEARED
+    setCoupon({ code: "", discountAmount: 0, finalTotal: 0 });
   };
 
   // ================= SAVE FOR LATER =================
-
   const moveToSavedForLater = (id) => {
     removeFromCart(id);
     setSavedForLater((prev) =>
@@ -204,7 +208,6 @@ export const AppProvider = ({ children }) => {
   };
 
   // ================= PROVIDER =================
-
   return (
     <AppContext.Provider
       value={{
@@ -215,7 +218,11 @@ export const AppProvider = ({ children }) => {
         isAdmin,
         setIsAdmin,
 
-        // 🔥 PRODUCT FUNCTIONS (IMPORTANT)
+        // ✅ NEW COUPON
+        coupon,
+        setCoupon,
+
+        // PRODUCT FUNCTIONS
         addProduct,
         deleteProduct,
         updateProduct,
