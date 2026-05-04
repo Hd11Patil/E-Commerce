@@ -68,65 +68,80 @@ const CheckoutPage = () => {
   };
 
   // ================= PAYMENT =================
-  // const handlePlaceOrder = async () => {
-  //   const finalAddress = selectedAddress || address;
 
-  //   const { name, phone, pincode, city, state, addressLine } = finalAddress;
+//   const handlePlaceOrder = async () => {
+//   const finalAddress = selectedAddress || address;
 
-  //   if (!name || !phone || !pincode || !city || !state || !addressLine) {
-  //     alert("⚠️ Select or fill address");
-  //     return;
-  //   }
+//   const { name, phone, pincode, city, state, addressLine } = finalAddress;
 
-  //   try {
-  //     const response = await fetch(
-  //       "https://e-commerce-bfn8.onrender.com/create-checkout-session",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           cartItems: cartProducts,
-  //           totalAmount: cartProducts.reduce(
-  //             (sum, item) => sum + item.price,
-  //             0,
-  //           ), 
-  //           discountAmount,
-  //           couponCode,
-  //         }),
-  //       },
-  //     );
+//   if (!name || !phone || !pincode || !city || !state || !addressLine) {
+//     alert("⚠️ Select or fill address");
+//     return;
+//   }
 
-  //     const data = await response.json();
+//   try {
+//     // 🔥 ORIGINAL TOTAL (without coupon)
+//     const originalTotal = cartProducts.reduce(
+//       (sum, item) => sum + item.price,
+//       0
+//     );
 
-  //     localStorage.setItem("order_address", JSON.stringify(finalAddress));
+//     // ✅ SAVE FULL ORDER DATA (VERY IMPORTANT)
+//     localStorage.setItem(
+//       "order_summary",
+//       JSON.stringify({
+//         totalAmount: originalTotal,
+//         finalAmount: finalTotal,
+//         discountAmount,
+//         couponCode,
+//       })
+//     );
 
-  //     window.location.href = data.url;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+//     const response = await fetch(
+//       "https://e-commerce-bfn8.onrender.com/create-checkout-session",
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           cartItems: cartProducts,
+//           totalAmount: originalTotal, // ✅ ORIGINAL
+//           couponCode, // ✅ IMPORTANT
+//         }),
+//       }
+//     );
+
+//     const data = await response.json();
+
+//     localStorage.setItem("order_address", JSON.stringify(finalAddress));
+
+//     window.location.href = data.url;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
 
-  const handlePlaceOrder = async () => {
+const handlePlaceOrder = async () => {
   const finalAddress = selectedAddress || address;
 
   const { name, phone, pincode, city, state, addressLine } = finalAddress;
 
+  // ✅ Validate address
   if (!name || !phone || !pincode || !city || !state || !addressLine) {
     alert("⚠️ Select or fill address");
     return;
   }
 
   try {
-    // 🔥 ORIGINAL TOTAL (without coupon)
+    // 🔥 Calculate original total (before coupon)
     const originalTotal = cartProducts.reduce(
       (sum, item) => sum + item.price,
       0
     );
 
-    // ✅ SAVE FULL ORDER DATA (VERY IMPORTANT)
+    // ✅ Save order summary (for success page)
     localStorage.setItem(
       "order_summary",
       JSON.stringify({
@@ -137,6 +152,13 @@ const CheckoutPage = () => {
       })
     );
 
+    // ✅ Save address
+    localStorage.setItem(
+      "order_address",
+      JSON.stringify(finalAddress)
+    );
+
+    // 🔥 Create Stripe session
     const response = await fetch(
       "https://e-commerce-bfn8.onrender.com/create-checkout-session",
       {
@@ -146,19 +168,27 @@ const CheckoutPage = () => {
         },
         body: JSON.stringify({
           cartItems: cartProducts,
-          totalAmount: originalTotal, // ✅ ORIGINAL
-          couponCode, // ✅ IMPORTANT
+          totalAmount: originalTotal,
+          couponCode,
+
+          // 🔥 IMPORTANT FIX (LOCALHOST + VERCEL SUPPORT)
+          origin: window.location.origin,
         }),
       }
     );
 
     const data = await response.json();
 
-    localStorage.setItem("order_address", JSON.stringify(finalAddress));
+    if (!data.url) {
+      alert("Payment session failed");
+      return;
+    }
 
+    // 🚀 Redirect to Stripe Checkout
     window.location.href = data.url;
   } catch (err) {
-    console.error(err);
+    console.error("Checkout Error:", err);
+    alert("Something went wrong while placing order");
   }
 };
   return (

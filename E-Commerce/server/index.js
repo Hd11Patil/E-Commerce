@@ -96,15 +96,67 @@ app.post("/register", async (req, res) => {
 });
 
 // ================= STRIPE CHECKOUT =================
+// app.post("/create-checkout-session", async (req, res) => {
+//   try {
+//     const { cartItems, totalAmount, discountAmount, couponCode } = req.body;
+
+//     if (!cartItems || cartItems.length === 0) {
+//       return res.status(400).json({ error: "Cart is empty" });
+//     }
+
+//     // 🔥 ALWAYS calculate on backend (SECURE)
+//     let finalAmount = totalAmount;
+
+//     if (couponCode) {
+//       const coupon = await Coupon.findOne({ code: couponCode });
+
+//       if (coupon && coupon.expiry > new Date()) {
+//         if (coupon.type === "percentage") {
+//           finalAmount = totalAmount - (totalAmount * coupon.discount) / 100;
+//         } else {
+//           finalAmount = totalAmount - coupon.discount;
+//         }
+//       }
+//     }
+
+//     // 🛑 prevent negative amount
+//     if (finalAmount < 1) finalAmount = 1;
+
+//     const session = await stripe.checkout.sessions.create({
+//       line_items: [
+//         {
+//           price_data: {
+//             currency: "inr",
+//             product_data: {
+//               name: "Order Payment",
+//             },
+//             unit_amount: Math.round(finalAmount * 100), // ✅ FINAL PRICE
+//           },
+//           quantity: 1,
+//         },
+//       ],
+//       mode: "payment",
+//       success_url: "https://e-commerce-jet-seven-60.vercel.app/success",
+//       cancel_url: "https://e-commerce-jet-seven-60.vercel.app/cancel",
+//     });
+
+//     res.json({ url: session.url });
+
+//   } catch (err) {
+//     console.error("Stripe Error:", err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+
 app.post("/create-checkout-session", async (req, res) => {
   try {
-    const { cartItems, totalAmount, discountAmount, couponCode } = req.body;
+    const { cartItems, totalAmount, couponCode, origin } = req.body;
 
     if (!cartItems || cartItems.length === 0) {
       return res.status(400).json({ error: "Cart is empty" });
     }
 
-    // 🔥 ALWAYS calculate on backend (SECURE)
     let finalAmount = totalAmount;
 
     if (couponCode) {
@@ -119,7 +171,6 @@ app.post("/create-checkout-session", async (req, res) => {
       }
     }
 
-    // 🛑 prevent negative amount
     if (finalAmount < 1) finalAmount = 1;
 
     const session = await stripe.checkout.sessions.create({
@@ -130,14 +181,16 @@ app.post("/create-checkout-session", async (req, res) => {
             product_data: {
               name: "Order Payment",
             },
-            unit_amount: Math.round(finalAmount * 100), // ✅ FINAL PRICE
+            unit_amount: Math.round(finalAmount * 100),
           },
           quantity: 1,
         },
       ],
       mode: "payment",
-      success_url: "https://e-commerce-jet-seven-60.vercel.app/success",
-      cancel_url: "https://e-commerce-jet-seven-60.vercel.app/cancel",
+
+      // 🔥 DYNAMIC URLs
+      success_url: `${origin}/success`,
+      cancel_url: `${origin}/cancel`,
     });
 
     res.json({ url: session.url });
