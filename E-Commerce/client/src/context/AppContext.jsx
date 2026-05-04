@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-
   // ================= PRODUCTS =================
   const [products, setProducts] = useState([
     {
@@ -116,9 +115,7 @@ export const AppProvider = ({ children }) => {
 
   const updateProduct = (id, updatedData) => {
     setProducts((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, ...updatedData } : p
-      )
+      prev.map((p) => (p.id === id ? { ...p, ...updatedData } : p)),
     );
   };
 
@@ -169,14 +166,28 @@ export const AppProvider = ({ children }) => {
   // ================= CART =================
   const toggleWishlist = (id) =>
     setWishlist((w) =>
-      w.includes(id) ? w.filter((x) => x !== id) : [...w, id]
+      w.includes(id) ? w.filter((x) => x !== id) : [...w, id],
     );
 
-  const addToCart = (id) =>
-    setCart((c) => (c.includes(id) ? c : [...c, id]));
 
-  const removeFromCart = (id) =>
-    setCart((c) => c.filter((cartId) => cartId !== id));
+
+  const addToCart = (id) => {
+    setCart((prevCart) => {
+      if (prevCart.includes(id)) return prevCart; // block duplicates
+      return [...prevCart, id];
+    });
+  };
+  
+  const removeFromCart = (id) => {
+    setCart((prevCart) => {
+      const index = prevCart.indexOf(id);
+      if (index === -1) return prevCart;
+
+      const newCart = [...prevCart];
+      newCart.splice(index, 1); // remove ONLY ONE
+      return newCart;
+    });
+  };
 
   const clearCart = () => {
     setCart([]);
@@ -187,24 +198,21 @@ export const AppProvider = ({ children }) => {
   };
 
   // ================= SAVE FOR LATER =================
+ 
   const moveToSavedForLater = (id) => {
-    removeFromCart(id);
-    setSavedForLater((prev) =>
-      prev.includes(id) ? prev : [...prev, id]
+    setCart((prevCart) => prevCart.filter((item) => item !== id));
+
+    setSavedForLater((prevSaved) =>
+      prevSaved.includes(id) ? prevSaved : [...prevSaved, id],
     );
   };
-
   const moveSavedToCart = (id) => {
-    setSavedForLater((prev) =>
-      prev.filter((savedId) => savedId !== id)
-    );
+    setSavedForLater((prev) => prev.filter((savedId) => savedId !== id));
     addToCart(id);
   };
 
   const removeFromSavedForLater = (id) => {
-    setSavedForLater((prev) =>
-      prev.filter((savedId) => savedId !== id)
-    );
+    setSavedForLater((prev) => prev.filter((savedId) => savedId !== id));
   };
 
   // ================= PROVIDER =================

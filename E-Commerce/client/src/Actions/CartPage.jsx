@@ -32,6 +32,8 @@ const CartPage = () => {
     removeFromCart,
     savedForLater,
     moveToSavedForLater,
+    moveSavedToCart,
+    removeFromSavedForLater,
   } = useApp();
 
   // ================= DATA =================
@@ -78,7 +80,7 @@ const CartPage = () => {
     }
   };
 
-  // ✅ Always sync total correctly
+  // ================= EFFECTS =================
   useEffect(() => {
     if (discountAmount > 0) {
       setFinalTotal(baseTotal - discountAmount);
@@ -87,13 +89,12 @@ const CartPage = () => {
     }
   }, [baseTotal, discountAmount]);
 
-  // reset coupon if cart changes
   useEffect(() => {
     setDiscountAmount(0);
     setCouponCode("");
   }, [cart]);
 
-  // ✅ IMPORTANT: PASS EVERYTHING TO CHECKOUT
+  // ================= CHECKOUT =================
   const handleCheckout = () => {
     navigate("/checkout", {
       state: {
@@ -108,6 +109,8 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
+      
+      {/* HEADER */}
       <header className="cart-header">
         <h1>Shopping Bag</h1>
         <span className="item-count">
@@ -116,6 +119,7 @@ const CartPage = () => {
         </span>
       </header>
 
+      {/* EMPTY STATE */}
       {cartProducts.length === 0 ? (
         <div className="empty-cart">
           <h2>Your shopping bag is empty</h2>
@@ -127,31 +131,107 @@ const CartPage = () => {
         </div>
       ) : (
         <div className="cart-container">
+
+          {/* LEFT SIDE */}
           <div className="cart-items-section">
+
+            {/* CART ITEMS */}
             {cartProducts.map((p) => (
               <div key={p.id} className="cart-item-card">
-                <img src={getImage(p.id)} alt={p.name} />
+
+                <img
+                  className="cart-item-image"
+                  src={getImage(p.id)}
+                  alt={p.name}
+                />
 
                 <div className="cart-item-details">
-                  <p>{p.brand}</p>
-                  <h3>{p.name}</h3>
-                  <div>
-                    ₹{p.price} <del>₹{p.originalPrice}</del>
+                  <p className="item-brand">{p.brand}</p>
+                  <h3 className="item-name">{p.name}</h3>
+
+                  <div className="item-price-row">
+                    <span className="item-price">₹{p.price}</span>
+                    <span className="item-original-price">
+                      ₹{p.originalPrice}
+                    </span>
                   </div>
                 </div>
 
-                <div>
-                  <button onClick={() => removeFromCart(p.id)}>
+                <div className="cart-item-actions">
+                  <button
+                    className="text-action-btn cart-remove-btn"
+                    onClick={() => removeFromCart(p.id)}
+                  >
                     Remove
                   </button>
-                  <button onClick={() => moveToSavedForLater(p.id)}>
-                    Save
+
+
+                  <button
+                    className="text-action-btn save-btn"
+                    onClick={() => moveToSavedForLater(p.id)}
+                  >
+                    Save for later
                   </button>
                 </div>
               </div>
             ))}
+
+            {/* SAVED FOR LATER */}
+            {savedForLater.length > 0 && (
+              <div className="saved-for-later-section">
+                <h2 className="saved-header">
+                  Saved for Later ({savedForLater.length})
+                </h2>
+
+                {products
+                  .filter((p) => savedForLater.includes(p.id))
+                  .map((p) => (
+                    <div
+                      key={p.id}
+                      className="cart-item-card saved-card"
+                    >
+                      <img
+                        className="cart-item-image"
+                        src={getImage(p.id)}
+                        alt={p.name}
+                      />
+                   
+
+                      <div className="cart-item-details">
+                        <p className="item-brand">{p.brand}</p>
+                        <h3 className="item-name">{p.name}</h3>
+
+                        <div className="item-price-row">
+                          <span className="item-price">₹{p.price}</span>
+                        </div>
+                      </div>
+
+                      <div className="cart-item-actions">
+                        <button
+                          className="text-action-btn add-back-btn"
+                          onClick={() => moveSavedToCart(p.id)}
+                        >
+                          Move to Cart
+                        </button>
+
+
+                        <button
+                          className="text-action-btn cart-remove-btn"
+                          onClick={() =>
+                            removeFromSavedForLater(p.id)
+                          }
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+
           </div>
 
+          {/* RIGHT SIDE */}
           <CheckoutSummary
             totalMRP={totalMRP}
             totalDiscount={totalDiscount}
@@ -160,8 +240,9 @@ const CartPage = () => {
             setCouponCode={setCouponCode}
             applyCoupon={applyCoupon}
             discountAmount={discountAmount}
-            handleCheckout={handleCheckout} // ✅ THIS IS CRITICAL
+            handleCheckout={handleCheckout}
           />
+
         </div>
       )}
     </div>
