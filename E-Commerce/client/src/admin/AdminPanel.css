@@ -344,3 +344,36 @@ tr:hover {
     padding: 15px;
   }
 }
+
+
+/* ---------------------order tabs css--------------------------- */
+.tabs {
+  margin-bottom: 15px;
+}
+
+.tabs button {
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.tabs button:hover {
+  background: #eee;
+}
+
+.tabs .active {
+  background: #333;
+  color: white;
+}
+
+.status.return {
+  background: orange;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+.return-row {
+  background: #fff3e0;
+}

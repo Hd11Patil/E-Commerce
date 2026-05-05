@@ -96,58 +96,6 @@ app.post("/register", async (req, res) => {
 });
 
 // ================= STRIPE CHECKOUT =================
-// app.post("/create-checkout-session", async (req, res) => {
-//   try {
-//     const { cartItems, totalAmount, discountAmount, couponCode } = req.body;
-
-//     if (!cartItems || cartItems.length === 0) {
-//       return res.status(400).json({ error: "Cart is empty" });
-//     }
-
-//     // 🔥 ALWAYS calculate on backend (SECURE)
-//     let finalAmount = totalAmount;
-
-//     if (couponCode) {
-//       const coupon = await Coupon.findOne({ code: couponCode });
-
-//       if (coupon && coupon.expiry > new Date()) {
-//         if (coupon.type === "percentage") {
-//           finalAmount = totalAmount - (totalAmount * coupon.discount) / 100;
-//         } else {
-//           finalAmount = totalAmount - coupon.discount;
-//         }
-//       }
-//     }
-
-//     // 🛑 prevent negative amount
-//     if (finalAmount < 1) finalAmount = 1;
-
-//     const session = await stripe.checkout.sessions.create({
-//       line_items: [
-//         {
-//           price_data: {
-//             currency: "inr",
-//             product_data: {
-//               name: "Order Payment",
-//             },
-//             unit_amount: Math.round(finalAmount * 100), // ✅ FINAL PRICE
-//           },
-//           quantity: 1,
-//         },
-//       ],
-//       mode: "payment",
-//       success_url: "https://e-commerce-jet-seven-60.vercel.app/success",
-//       cancel_url: "https://e-commerce-jet-seven-60.vercel.app/cancel",
-//     });
-
-//     res.json({ url: session.url });
-
-//   } catch (err) {
-//     console.error("Stripe Error:", err);
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
 
 app.post("/create-checkout-session", async (req, res) => {
   try {
@@ -194,7 +142,6 @@ app.post("/create-checkout-session", async (req, res) => {
     });
 
     res.json({ url: session.url });
-
   } catch (err) {
     console.error("Stripe Error:", err);
     res.status(500).json({ error: err.message });
@@ -265,7 +212,10 @@ app.post("/admin/add-coupon", async (req, res) => {
 
     // Validate expiry
     if (expiry && new Date(expiry) < new Date()) {
-      return res.json({ success: false, message: "Expiry must be future date" });
+      return res.json({
+        success: false,
+        message: "Expiry must be future date",
+      });
     }
 
     // ================= CHECK EXISTING =================
@@ -285,7 +235,6 @@ app.post("/admin/add-coupon", async (req, res) => {
     });
 
     res.json({ success: true, coupon });
-
   } catch (err) {
     console.error("ADD COUPON ERROR:", err);
     res.status(500).json({ success: false, message: "Server error" });
@@ -417,6 +366,74 @@ app.put("/admin/order-status/:id", async (req, res) => {
     );
 
     res.json(order);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// =================ORDER RETURN REQUEST =================
+app.post("/return/:id", async (req, res) => {
+  try {
+    const { reason } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (order.deliveryStatus !== "delivered") {
+      return res.status(400).json({
+        message: "Return only allowed after delivery",
+      });
+    }
+
+    if (order.returnRequest?.isRequested) {
+      return res.status(400).json({
+        message: "Return already requested",
+      });
+    }
+
+    order.returnRequest = {
+      isRequested: true,
+      reason,
+      status: "pending",
+      requestedAt: new Date(),
+    };
+
+    await order.save();
+
+    res.json({ success: true, message: "Return requested" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= ADMIN RETURN ACTION =================
+app.put("/admin/return/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order || !order.returnRequest?.isRequested) {
+      return res.status(400).json({ message: "No return request found" });
+    }
+
+    if (status === "approved") {
+      order.returnRequest.status = "completed";
+      order.paymentStatus = "refunded"; // 💰 simulate refund
+    } else {
+      order.returnRequest.status = "rejected";
+    }
+
+    order.returnRequest.processedAt = new Date();
+
+    await order.save();
+
+    res.json({ success: true, order });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
