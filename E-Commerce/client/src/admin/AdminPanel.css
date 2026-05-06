@@ -153,6 +153,11 @@ tr:hover {
   color: #155724;
 }
 
+.returned {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
 .cancelled {
   background: #f8d7da;
   color: #721c24;
@@ -170,7 +175,7 @@ tr:hover {
   color: white;
   font-size: 12px;
 }
-
+.approve { background: #2979ff; }
 .deliver { background: #2e7d32; }
 .cancel { background: #e53935; }
 .processing { background: #81f504; }

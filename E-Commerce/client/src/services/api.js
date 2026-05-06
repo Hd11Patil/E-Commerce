@@ -2,7 +2,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://e-commerce-bfn8.onrender.com", //  no trailing slash
+  baseURL:
+    process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },

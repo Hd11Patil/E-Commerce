@@ -314,9 +314,10 @@ body {
   display: flex;
   gap: 10px;
   margin-top: 12px;
+  flex-wrap: wrap;
 }
 
-.view-btn, .cancel-btn {
+.view-btn, .cancel-btn, .return-btn {
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
@@ -341,8 +342,61 @@ body {
   background: linear-gradient(135deg, #25e208, #25e208);
   transform: scale(1.03);
 }
-------
 
+.return-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff3f6c, #e91e8c);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.return-btn:hover {
+  background: linear-gradient(135deg, #e91e8c, #c2185b);
+  transform: scale(1.03);
+}
+
+.return-status-section {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #f0e6ec;
+}
+
+.return-status-section h4 {
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 14px;
+}
+
+.return-select {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.submit-return-btn {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff3f6c, #e91e8c);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.submit-return-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 .cancel-btn {
   background: #ff4d4f;
   color: white;

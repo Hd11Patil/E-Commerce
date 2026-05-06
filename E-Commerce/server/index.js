@@ -416,14 +416,23 @@ app.put("/admin/return/:id", async (req, res) => {
   try {
     const { status } = req.body;
 
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid return status" });
+    }
+
     const order = await Order.findById(req.params.id);
 
     if (!order || !order.returnRequest?.isRequested) {
       return res.status(400).json({ message: "No return request found" });
     }
 
+    if (order.returnRequest.status !== "pending") {
+      return res.status(400).json({ message: "Return request already processed" });
+    }
+
     if (status === "approved") {
       order.returnRequest.status = "completed";
+      order.deliveryStatus = "returned";
       order.paymentStatus = "refunded"; // 💰 simulate refund
     } else {
       order.returnRequest.status = "rejected";

@@ -44,7 +44,7 @@ function ReturnTracking({ status }) {
   const labels = {
     pending: "Requested",
     approved: "Approved",
-    completed: "Refund Completed",
+    completed: "Returned",
     rejected: "Rejected",
   };
 

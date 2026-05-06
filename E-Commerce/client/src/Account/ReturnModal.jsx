@@ -62,6 +62,9 @@
 // 0000000000000000000000000000000000000
 import { useState } from "react";
 
+const API_BASE =
+  process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com";
+
 function ReturnModal({ order, onClose, refreshOrders }) {
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -76,7 +79,7 @@ function ReturnModal({ order, onClose, refreshOrders }) {
       setLoading(true);
 
       const res = await fetch(
-        `https://e-commerce-bfn8.onrender.com/return/${order._id}`,
+        `${API_BASE}/return/${order._id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -134,7 +137,7 @@ function ReturnModal({ order, onClose, refreshOrders }) {
           onClick={submitReturn}
           disabled={loading}
         >
-          {loading ? "Submitting..." : "Submit Return"}
+          {loading ? "Confirming..." : "Confirm Return"}
         </button>
 
       </div>
