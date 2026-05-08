@@ -26,6 +26,7 @@ import CheckoutPage from "./Actions/CheckoutPage";
 import Success from "./Actions/Success";
 import Cancel from "./Actions/Cancel";
 import AdminRoute from "./admin/AdminRoute";
+import SearchPage from "./pages/SearchPage";
 
 // Create a simple wrapper for your homepage content so it's clean
 const HomeContent = () => (
@@ -39,7 +40,6 @@ const HomeContent = () => (
 );
 
 const AppInner = () => {
-
   return (
     <div className="app">
       <TopBar />
@@ -87,6 +87,8 @@ const AppInner = () => {
           {/* Auth */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+
+          <Route path="/search/:query" element={<SearchPage />} />
 
           {/* 404 */}
           <Route path="*" element={<div>404 Not Found</div>} />

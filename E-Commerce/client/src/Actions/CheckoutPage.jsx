@@ -3,14 +3,14 @@ import { useApp } from "../context/AppContext";
 import { useLocation } from "react-router-dom";
 import "./CheckoutPage.css";
 
-const PRODUCT_IMAGES = {
-  1: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&q=80",
-  2: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&q=80",
-  3: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80",
-  4: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&q=80",
-};
+// const PRODUCT_IMAGES = {
+//   1: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&q=80",
+//   2: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&q=80",
+//   3: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80",
+//   4: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&q=80",
+// };
 
-const getImage = (id) => PRODUCT_IMAGES[id] || PRODUCT_IMAGES[1];
+// const getImage = (id) => PRODUCT_IMAGES[id] || PRODUCT_IMAGES[1];
 
 const CheckoutPage = () => {
   const { products, cart } = useApp();
@@ -203,7 +203,8 @@ const handlePlaceOrder = async () => {
 
             {cartProducts.map((p) => (
               <div key={p.id} className="checkout-item">
-                <img src={getImage(p.id)} alt={p.name} />
+                {/* <img src={getImage(p.id)} alt={p.name} /> */}
+                <img src={p.image} alt={p.name} />
                 <div className="item-info">
                   <p className="item-name">{p.name}</p>
                   <p className="item-price">₹{p.price}</p>

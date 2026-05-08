@@ -4,104 +4,66 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   // ================= PRODUCTS =================
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      brand: "H&M",
-      name: "Floral Wrap Dress",
-      price: 1299,
-      originalPrice: 2999,
-      discount: 57,
-      emoji: "👗",
-      color: "#fce4ec",
-      category: "Women",
-      stock: 24,
-    },
-    {
-      id: 2,
-      brand: "Zara",
-      name: "Linen Wide Leg Pants",
-      price: 2499,
-      originalPrice: 4999,
-      discount: 50,
-      emoji: "👖",
-      color: "#e8f5e9",
-      category: "Women",
-      stock: 18,
-    },
-    {
-      id: 3,
-      brand: "Jack & Jones",
-      name: "Classic Polo Shirt",
-      price: 899,
-      originalPrice: 1799,
-      discount: 50,
-      emoji: "👔",
-      color: "#e3f2fd",
-      category: "Men",
-      stock: 42,
-    },
-    {
-      id: 4,
-      brand: "Viva",
-      name: "Embroidered Anarkali",
-      price: 3499,
-      originalPrice: 6999,
-      discount: 50,
-      emoji: "🥻",
-      color: "#fff3e0",
-      category: "Women",
-      stock: 9,
-    },
-    {
-      id: 5,
-      brand: "Puma",
-      name: "Training Jogger Set",
-      price: 1899,
-      originalPrice: 3999,
-      discount: 52,
-      emoji: "🏃",
-      color: "#e8f5e9",
-      category: "Men",
-      stock: 31,
-    },
-    {
-      id: 6,
-      brand: "Steve Madden",
-      name: "Strappy Block Heels",
-      price: 2999,
-      originalPrice: 5999,
-      discount: 50,
-      emoji: "👠",
-      color: "#fff8e1",
-      category: "Women",
-      stock: 15,
-    },
-    {
-      id: 7,
-      brand: "Louis Philippe",
-      name: "Slim Fit Chinos",
-      price: 1599,
-      originalPrice: 3299,
-      discount: 52,
-      emoji: "👖",
-      color: "#ede7f6",
-      category: "Men",
-      stock: 27,
-    },
-    {
-      id: 8,
-      brand: "Biba",
-      name: "Printed Kurta Set",
-      price: 1299,
-      originalPrice: 2799,
-      discount: 54,
-      emoji: "🥻",
-      color: "#fce4ec",
-      category: "Women",
-      stock: 6,
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+
+  // Shuffle Function
+  const shuffleArray = (array) => {
+    return [...array].sort(() => Math.random() - 10);
+  };
+
+  // FETCH PRODUCTS FROM API
+  useEffect(() => {
+    const urls = [
+      "https://dummyjson.com/products/category/tops",
+
+      "https://dummyjson.com/products/category/mens-shirts",
+
+      "https://dummyjson.com/products/category/womens-dresses",
+
+      // "https://dummyjson.com/products/category/mens-shoes",
+
+      // "https://dummyjson.com/products/category/womens-shoes",
+
+      // "https://dummyjson.com/products/category/womens-bags",
+    ];
+
+    Promise.all(urls.map((url) => fetch(url).then((res) => res.json())))
+
+      .then((data) => {
+        // Combine all products
+        const allProducts = data.flatMap((item) => item.products);
+
+        // Convert API data to YOUR product format
+        const formattedProducts = allProducts.map((item) => ({
+          id: item.id,
+
+          brand: item.brand || "Fashion",
+
+          name: item.title,
+
+          price: Math.floor(item.price * 80),
+
+          originalPrice: Math.floor(
+            item.price * 80 + (item.price * 80 * item.discountPercentage) / 100,
+          ),
+
+          discount: Math.floor(item.discountPercentage),
+
+          image: item.images[0],
+
+          category: "Fashion",
+
+          stock: item.stock || 100,
+        }));
+
+        // Shuffle products randomly
+        const randomProducts = shuffleArray(formattedProducts).slice(0,12);
+
+        setProducts(randomProducts);
+      })
+
+      .catch((err) => console.log(err));
+  }, []);
 
   // ================= PRODUCT CRUD =================
   const addProduct = (product) => {
@@ -169,15 +131,13 @@ export const AppProvider = ({ children }) => {
       w.includes(id) ? w.filter((x) => x !== id) : [...w, id],
     );
 
-
-
   const addToCart = (id) => {
     setCart((prevCart) => {
       if (prevCart.includes(id)) return prevCart; // block duplicates
       return [...prevCart, id];
     });
   };
-  
+
   const removeFromCart = (id) => {
     setCart((prevCart) => {
       const index = prevCart.indexOf(id);
@@ -198,7 +158,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // ================= SAVE FOR LATER =================
- 
+
   const moveToSavedForLater = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item !== id));
 

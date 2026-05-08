@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import "./Navbar.css";
 
@@ -10,6 +10,8 @@ const Navbar = () => {
   const [search, setSearch] = useState("");
   const [active, setActive] = useState("Women");
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   return (
     <header className="navbar">
@@ -45,20 +47,33 @@ const Navbar = () => {
               {item}
             </button>
           ))}
-         
         </nav>
 
         {/* Search */}
+
         <div className="navbar-search">
-          <span className="search-icon">🔍</span>
           <input
             type="text"
             placeholder="Search for products, styles, brand"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && search.trim() !== "") {
+                navigate(`/search/${search}`);
+              }
+            }}
           />
-          <button className="camera-btn" title="Visual Search">
-            📷
+
+          {/* SEARCH BUTTON */}
+          <button
+            className="search-btn"
+            onClick={() => {
+              if (search.trim() !== "") {
+                navigate(`/search/${search}`);
+              }
+            }}
+          >
+            🔍
           </button>
         </div>
 
