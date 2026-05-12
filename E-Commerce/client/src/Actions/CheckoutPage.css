@@ -151,3 +151,145 @@ textarea {
     font-size: 16px;
   }
 }
+/* ------------------------------ADDRESS SECTION-------------------------------- */
+/* =========================================
+   SAVED ADDRESSES
+========================================= */
+
+.checkout-saved-addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+/* CARD */
+
+.checkout-address-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 18px;
+  background: white;
+  transition: 0.3s;
+}
+
+.checkout-address-card:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+/* SELECTED */
+
+.selected-address {
+  border-color: #ff1681;
+  background: #fff7fb;
+}
+
+/* TEXT */
+
+.checkout-address-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.checkout-address-name span {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.checkout-address-line,
+.checkout-address-location {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+/* ACTIONS */
+
+.checkout-address-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* BUTTONS */
+
+.checkout-edit-btn,
+.checkout-delete-btn {
+  width: 80px;
+  height: 35px;
+
+  border: none;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* EDIT */
+
+.checkout-edit-btn {
+  background: #111;
+  color: white;
+}
+
+.checkout-edit-btn:hover {
+  background: #222;
+}
+
+/* DELETE */
+
+.checkout-delete-btn {
+  background: #ff4d4f;
+  color: white;
+}
+
+.checkout-delete-btn:hover {
+  opacity: 0.9;
+}
+/* =========================================
+   ADDRESS FORM
+
+   /* =========================================
+   FORM ACTIONS
+========================================= */
+
+.checkout-form-actions {
+  margin-top: 16px;
+}
+
+/* SAVE BUTTON */
+
+.checkout-save-address-btn {
+  width: 150px;
+  height: 44px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #ff1681;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.checkout-save-address-btn:hover {
+  opacity: 0.9;
+}

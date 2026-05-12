@@ -33,7 +33,7 @@ function OrdersSection({ activeSection }) {
     if (!user?.email) return order;
 
     const res = await fetch(
-      `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`
+      `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`,
     );
 
     const updatedOrders = await res.json();
@@ -52,7 +52,7 @@ function OrdersSection({ activeSection }) {
       if (!user || !user.email) return setOrders([]);
 
       const res = await fetch(
-        `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`
+        `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`,
       );
 
       const data = await res.json();
@@ -71,10 +71,9 @@ function OrdersSection({ activeSection }) {
 
   const cancelOrder = async (id) => {
     try {
-      const res = await fetch(
-        `${API_BASE}/cancel-order/${id}`,
-        { method: "PUT" }
-      );
+      const res = await fetch(`${API_BASE}/cancel-order/${id}`, {
+        method: "PUT",
+      });
 
       const data = await res.json();
 
@@ -91,29 +90,28 @@ function OrdersSection({ activeSection }) {
   };
 
   // ✅ ALWAYS GET LATEST ORDER BEFORE OPENING MODAL
- const handleViewOrder = async (order) => {
-  try {
-    const rawUser = localStorage.getItem("user");
-    const user = JSON.parse(rawUser);
+  const handleViewOrder = async (order) => {
+    try {
+      const rawUser = localStorage.getItem("user");
+      const user = JSON.parse(rawUser);
 
-    const res = await fetch(
-      `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`
-    );
+      const res = await fetch(
+        `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`,
+      );
 
-    const updatedOrders = await res.json();
+      const updatedOrders = await res.json();
 
-    const freshOrder = updatedOrders.find((o) => o._id === order._id);
+      const freshOrder = updatedOrders.find((o) => o._id === order._id);
 
-    // ✅ fallback safety
-    setSelectedOrder(freshOrder || order);
-    setShowOrderDetails(true);
-
-  } catch (err) {
-    console.error(err);
-    setSelectedOrder(order); // fallback
-    setShowOrderDetails(true);
-  }
-};
+      // ✅ fallback safety
+      setSelectedOrder(freshOrder || order);
+      setShowOrderDetails(true);
+    } catch (err) {
+      console.error(err);
+      setSelectedOrder(order); // fallback
+      setShowOrderDetails(true);
+    }
+  };
 
   const handleReturnOrder = async (order) => {
     try {
@@ -123,7 +121,7 @@ function OrdersSection({ activeSection }) {
         alert(
           freshOrder.returnRequest?.isRequested
             ? "Return already requested"
-            : "Return is only available after delivery"
+            : "Return is only available after delivery",
         );
         fetchOrders();
         return;
@@ -197,12 +195,12 @@ function OrdersSection({ activeSection }) {
               )}
             </div>
 
-            {order.returnRequest?.isRequested && (
+            {/* {order.returnRequest?.isRequested && (
               <div className="return-status-section">
                 <h4>Return Status</h4>
                 <ReturnTracking status={order.returnRequest.status} />
               </div>
-            )}
+            )} */}
           </div>
         ))
       )}
@@ -213,7 +211,14 @@ function OrdersSection({ activeSection }) {
           <div className="modal">
             <div className="modal-header">
               <h2>Order Details</h2>
-              <span onClick={() => setSelectedOrder(null)}>✖</span>
+              <span
+                onClick={() => {
+                  setSelectedOrder(null);
+                  setShowOrderDetails(false);
+                }}
+              >
+                ✖
+              </span>
             </div>
 
             <div className="modal-info">
@@ -244,13 +249,13 @@ function OrdersSection({ activeSection }) {
 
             {/* ✅ RETURN BUTTON FIXED */}
             {canReturnOrder(selectedOrder) && (
-                <button
-                  className="return-btn"
-                  onClick={() => setShowReturnModal(true)}
-                >
-                  Return Order
-                </button>
-              )}
+              <button
+                className="return-btn"
+                onClick={() => setShowReturnModal(true)}
+              >
+                Return Order
+              </button>
+            )}
 
             {/* ✅ RETURN TRACKING */}
             {selectedOrder.returnRequest?.isRequested && (
@@ -275,12 +280,12 @@ function OrdersSection({ activeSection }) {
             const user = safeParse(rawUser);
 
             const res = await fetch(
-              `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`
+              `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`,
             );
 
             const updatedOrders = await res.json();
             const freshOrder = updatedOrders.find(
-              (o) => o._id === selectedOrder._id
+              (o) => o._id === selectedOrder._id,
             );
 
             setSelectedOrder(freshOrder);
