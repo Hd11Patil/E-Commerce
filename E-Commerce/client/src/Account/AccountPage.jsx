@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import OrdersSection from "./Order";
 import AddressSection from "./Address";
+import ProfileSection from "./ProfileSection";
+import Sidebar from "./Sidebar";
 
 import "./AccountPage.css";
 
@@ -21,51 +23,6 @@ const safeParse = (data, fallback = null) => {
   }
 };
 
-// ── Sidebar ─────────────────────────────────────────
-function Sidebar({ active, onSelect, onSignOut, user }) {
-  return (
-    <aside className="sidebar">
-      <div className="user-avatar">
-        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-      </div>
-
-      <div className="user-name">{user?.name || "User"}</div>
-      <div className="user-email">{user?.email || "No Email"}</div>
-
-      <hr className="sidebar-divider" />
-
-      <ul className="sidebar-menu">
-        {SECTIONS.map((s) => (
-          <li
-            key={s.id}
-            className={active === s.id ? "active" : ""}
-            onClick={() => onSelect(s.id)}
-          >
-            {s.label}
-          </li>
-        ))}
-      </ul>
-
-      <button className="signout-btn" onClick={onSignOut}>
-        Sign Out
-      </button>
-    </aside>
-  );
-}
-
-// ── Profile Section ─────────────────────────────────
-function ProfileSection({ user }) {
-  return (
-    <div className="content-card">
-      <h3>Profile</h3>
-
-      <input value={user?.name || ""} readOnly />
-      <input value={user?.email || ""} readOnly />
-      <input value={user?.mobile || ""} readOnly />
-      <input value={user?.gender || ""} readOnly />
-    </div>
-  );
-}
 
 // ── MAIN ───────────────────────────────────────────
 export default function AccountPage() {

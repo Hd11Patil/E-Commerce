@@ -32,7 +32,7 @@
   padding: 0 18px;
   border: none;
   border-radius: 10px;
-  background: #ff1681;
+  background: #111;
   color: white;
   font-size: 14px;
   font-weight: 600;
@@ -131,7 +131,7 @@
 /* SAVE */
 
 .address-save-btn {
-  background: #ff1681;
+  background: #111;
   color: white;
 }
 

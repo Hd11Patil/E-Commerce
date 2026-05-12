@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ReturnModal from "./ReturnModal";
 import ReturnTracking from "./ReturnTracking";
-import "./AccountPage.css";
+import "./OrdersSection.css";
 
 const API_BASE =
   process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com";
@@ -194,13 +194,6 @@ function OrdersSection({ activeSection }) {
                 </button>
               )}
             </div>
-
-            {/* {order.returnRequest?.isRequested && (
-              <div className="return-status-section">
-                <h4>Return Status</h4>
-                <ReturnTracking status={order.returnRequest.status} />
-              </div>
-            )} */}
           </div>
         ))
       )}
