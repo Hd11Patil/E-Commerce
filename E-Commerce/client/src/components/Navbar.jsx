@@ -12,7 +12,6 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-
   return (
     <header className="navbar">
       <div className="navbar-inner">
@@ -50,7 +49,6 @@ const Navbar = () => {
         </nav>
 
         {/* Search */}
-
         <div className="navbar-search">
           <input
             type="text"

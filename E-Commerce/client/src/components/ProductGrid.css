@@ -193,3 +193,120 @@
     grid-template-columns: 1fr;
   }
 }
+/* ------------------------------------------------------------------------ */
+/* HEADER BUTTONS */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* FILTER WRAPPER */
+.filter-wrapper {
+  position: relative;
+}
+
+/* FILTER BUTTON */
+.filter-btn {
+  padding: 9px 16px;
+  border: none;
+  background: #111;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: #333;
+}
+
+/* FILTER POPUP */
+.filter-sidebar {
+  position: absolute;
+
+  top: 50px;
+  right: 0;
+
+  width: 220px;
+
+  background: white;
+  padding: 18px;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.12);
+
+  z-index: 1000;
+
+  animation: filterPopup 0.25s ease;
+}
+
+/* FILTER HEADER */
+.filter-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 16px;
+}
+
+.filter-top h2 {
+  font-size: 17px;
+  color: #111;
+}
+
+/* CLOSE BUTTON */
+.close-filter {
+  border: none;
+  background: #f3f3f3;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition: 0.3s;
+}
+
+.close-filter:hover {
+  background: #e5e5e5;
+}
+
+/* SELECT */
+.filter-sidebar select {
+  width: 100%;
+
+  padding: 11px 12px;
+
+  border-radius: 10px;
+  border: 1px solid #ddd;
+
+  background: #fafafa;
+
+  font-size: 14px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+/* POPUP ANIMATION */
+@keyframes filterPopup {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

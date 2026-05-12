@@ -124,9 +124,9 @@
   font-size: 13px;
   font-weight: 600;
   padding: 6px 14px;
+  border: 2px solid #e1e2e2;
   border-radius: 20px;
   transition: all 0.2s ease;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -143,12 +143,12 @@
    background: #ffd6d6;
 }
 
-.save-btn {
+.save-later {
   background: #e6f0ff;
   color: #0066cc;
 }
 
-.save-btn:hover {
+.save-later:hover {
    background: #d6e6ff;
 }
 
