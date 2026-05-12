@@ -1,7 +1,10 @@
 import { useState } from "react";
 
 const API_BASE =
-  process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com";
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3001"
+    : "https://e-commerce-bfn8.onrender.com");
 
 function ReturnModal({ order, onClose, refreshOrders }) {
   const [reason, setReason] = useState("");

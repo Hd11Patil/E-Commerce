@@ -411,6 +411,55 @@ app.post("/return/:id", async (req, res) => {
   }
 });
 
+// ================= ORDER REPLACEMENT REQUEST =================
+app.post("/replacement/:id", async (req, res) => {
+  try {
+    const { reason } = req.body;
+
+    if (!reason) {
+      return res.status(400).json({ message: "Replacement reason is required" });
+    }
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (order.deliveryStatus !== "delivered") {
+      return res.status(400).json({
+        message: "Replacement only allowed after delivery",
+      });
+    }
+
+    if (order.returnRequest?.isRequested) {
+      return res.status(400).json({
+        message: "Replacement cannot be requested after return request",
+      });
+    }
+
+    if (order.replacementRequest?.isRequested) {
+      return res.status(400).json({
+        message: "Replacement already requested",
+      });
+    }
+
+    order.replacementRequest = {
+      isRequested: true,
+      reason,
+      status: "pending",
+      requestedAt: new Date(),
+    };
+
+    await order.save();
+
+    res.json({ success: true, message: "Replacement requested", order });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ================= ADMIN RETURN ACTION =================
 app.put("/admin/return/:id", async (req, res) => {
   try {
@@ -439,6 +488,40 @@ app.put("/admin/return/:id", async (req, res) => {
     }
 
     order.returnRequest.processedAt = new Date();
+
+    await order.save();
+
+    res.json({ success: true, order });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= ADMIN REPLACEMENT ACTION =================
+app.put("/admin/replacement/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid replacement status" });
+    }
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order || !order.replacementRequest?.isRequested) {
+      return res.status(400).json({ message: "No replacement request found" });
+    }
+
+    if (order.replacementRequest.status !== "pending") {
+      return res
+        .status(400)
+        .json({ message: "Replacement request already processed" });
+    }
+
+    order.replacementRequest.status =
+      status === "approved" ? "approved" : "rejected";
+    order.replacementRequest.processedAt = new Date();
 
     await order.save();
 

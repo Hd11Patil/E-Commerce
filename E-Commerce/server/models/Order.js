@@ -60,6 +60,18 @@ const orderSchema = new mongoose.Schema(
       processedAt: { type: Date, default: null },
     },
 
+    replacementRequest: {
+      isRequested: { type: Boolean, default: false },
+      reason: { type: String, default: "" },
+      status: {
+        type: String,
+        enum: ["pending", "approved", "rejected", "completed"],
+        default: "pending",
+      },
+      requestedAt: { type: Date, default: null },
+      processedAt: { type: Date, default: null },
+    },
+
     address: String,
     phone: String,
   },

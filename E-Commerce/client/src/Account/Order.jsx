@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import ReplacementModal from "./ReplacementModal";
+import ReplacementTracking from "./ReplacementTracking";
 import ReturnModal from "./ReturnModal";
 import ReturnTracking from "./ReturnTracking";
 import "./OrdersSection.css";
 
 const API_BASE =
-  process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com";
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3001"
+    : "https://e-commerce-bfn8.onrender.com");
 
 // ✅ Safe JSON parse helper
 const safeParse = (data, fallback = null) => {
@@ -21,10 +26,17 @@ function OrdersSection({ activeSection }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
+  const [showReplacementModal, setShowReplacementModal] = useState(false);
 
   const canReturnOrder = (order) =>
     order?.deliveryStatus === "delivered" &&
-    order?.returnRequest?.isRequested !== true;
+    order?.returnRequest?.isRequested !== true &&
+    order?.replacementRequest?.isRequested !== true;
+
+  const canReplaceOrder = (order) =>
+    order?.deliveryStatus === "delivered" &&
+    order?.returnRequest?.isRequested !== true &&
+    order?.replacementRequest?.isRequested !== true;
 
   const getFreshOrder = async (order) => {
     const rawUser = localStorage.getItem("user");
@@ -136,6 +148,29 @@ function OrdersSection({ activeSection }) {
     }
   };
 
+  const handleReplacementOrder = async (order) => {
+    try {
+      const freshOrder = await getFreshOrder(order);
+
+      if (!canReplaceOrder(freshOrder)) {
+        alert(
+          freshOrder.replacementRequest?.isRequested
+            ? "Replacement already requested"
+            : "Replacement is only available after delivery",
+        );
+        fetchOrders();
+        return;
+      }
+
+      setSelectedOrder(freshOrder);
+      setShowOrderDetails(false);
+      setShowReplacementModal(true);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+  };
+
   return (
     <div className="content-card">
       <h3>My Orders</h3>
@@ -193,7 +228,32 @@ function OrdersSection({ activeSection }) {
                   Return Order
                 </button>
               )}
+
+              {canReplaceOrder(order) && (
+                <button
+                  className="replacement-btn"
+                  onClick={() => handleReplacementOrder(order)}
+                >
+                  Replace Product
+                </button>
+              )}
             </div>
+
+            {order.returnRequest?.isRequested && (
+              <div className="return-status-section">
+                <h4>Return Status</h4>
+                <ReturnTracking status={order.returnRequest.status} />
+              </div>
+            )}
+
+            {order.replacementRequest?.isRequested && (
+              <div className="replacement-status-section">
+                <h4>Replacement Status</h4>
+                <ReplacementTracking
+                  status={order.replacementRequest.status}
+                />
+              </div>
+            )}
           </div>
         ))
       )}
@@ -250,11 +310,29 @@ function OrdersSection({ activeSection }) {
               </button>
             )}
 
+            {canReplaceOrder(selectedOrder) && (
+              <button
+                className="replacement-btn"
+                onClick={() => setShowReplacementModal(true)}
+              >
+                Replace Product
+              </button>
+            )}
+
             {/* ✅ RETURN TRACKING */}
             {selectedOrder.returnRequest?.isRequested && (
               <>
                 <h3>Return Status</h3>
                 <ReturnTracking status={selectedOrder.returnRequest.status} />
+              </>
+            )}
+
+            {selectedOrder.replacementRequest?.isRequested && (
+              <>
+                <h3>Replacement Status</h3>
+                <ReplacementTracking
+                  status={selectedOrder.replacementRequest.status}
+                />
               </>
             )}
           </div>
@@ -266,6 +344,30 @@ function OrdersSection({ activeSection }) {
         <ReturnModal
           order={selectedOrder}
           onClose={() => setShowReturnModal(false)}
+          refreshOrders={async () => {
+            await fetchOrders();
+
+            const rawUser = localStorage.getItem("user");
+            const user = safeParse(rawUser);
+
+            const res = await fetch(
+              `${API_BASE}/get-orders/${encodeURIComponent(user.email)}`,
+            );
+
+            const updatedOrders = await res.json();
+            const freshOrder = updatedOrders.find(
+              (o) => o._id === selectedOrder._id,
+            );
+
+            setSelectedOrder(freshOrder);
+          }}
+        />
+      )}
+
+      {showReplacementModal && selectedOrder && (
+        <ReplacementModal
+          order={selectedOrder}
+          onClose={() => setShowReplacementModal(false)}
           refreshOrders={async () => {
             await fetchOrders();
 

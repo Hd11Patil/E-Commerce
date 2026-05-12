@@ -379,8 +379,19 @@ tr:hover {
   border-radius: 5px;
 }
 
+.status.replacement {
+  background: #2979ff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
 .return-row {
   background: #fff3e0;
+}
+
+.replacement-row {
+  background: #eaf2ff;
 }
 
 /* --------------------------ADD PRODUCT------------------------------------ */

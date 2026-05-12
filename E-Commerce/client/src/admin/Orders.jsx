@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import API from "../services/api";
 
 const API_BASE =
-  process.env.REACT_APP_API_URL || "https://e-commerce-bfn8.onrender.com";
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3001"
+    : "https://e-commerce-bfn8.onrender.com");
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -15,6 +18,10 @@ const Orders = () => {
         const fixed = res.data.map((o) => ({
           ...o,
           returnRequest: o.returnRequest || {
+            isRequested: false,
+            status: "pending",
+          },
+          replacementRequest: o.replacementRequest || {
             isRequested: false,
             status: "pending",
           },
@@ -98,6 +105,44 @@ const Orders = () => {
     }
   };
 
+  const handleReplacement = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/admin/replacement/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      const data = await res.json();
+      const updatedOrder = data.order;
+
+      if (!res.ok) {
+        alert(data.message || "Failed to update replacement");
+        return;
+      }
+
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === id
+            ? {
+                ...(updatedOrder || o),
+                replacementRequest: {
+                  ...(updatedOrder?.replacementRequest ||
+                    o.replacementRequest),
+                  isRequested: true,
+                  status:
+                    updatedOrder?.replacementRequest?.status || status,
+                },
+              }
+            : o,
+        ),
+      );
+      load();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const getStatusClass = (status) => {
     if (status === "delivered") return "status delivered";
     if (status === "cancelled") return "status cancelled";
@@ -114,6 +159,12 @@ const Orders = () => {
           (o) =>
             o.returnRequest &&
             o.returnRequest.isRequested === true
+        )
+      : activeTab === "replacements"
+      ? orders.filter(
+          (o) =>
+            o.replacementRequest &&
+            o.replacementRequest.isRequested === true
         )
       : orders;
 
@@ -134,6 +185,13 @@ const Orders = () => {
         >
           Return Requests
         </button>
+
+        <button
+          className={activeTab === "replacements" ? "active" : ""}
+          onClick={() => setActiveTab("replacements")}
+        >
+          Replacement Requests
+        </button>
       </div>
 
       <table className="orders-table">
@@ -143,6 +201,7 @@ const Orders = () => {
             <th>Amount</th>
             <th>Status</th>
             {activeTab === "returns" && <th>Return</th>}
+            {activeTab === "replacements" && <th>Replacement</th>}
             <th>Actions</th>
           </tr>
         </thead>
@@ -152,7 +211,11 @@ const Orders = () => {
             <tr
               key={o._id}
               className={
-                o.returnRequest?.isRequested ? "return-row" : ""
+                o.returnRequest?.isRequested
+                  ? "return-row"
+                  : o.replacementRequest?.isRequested
+                  ? "replacement-row"
+                  : ""
               }
             >
               <td>{o.userEmail}</td>
@@ -168,6 +231,14 @@ const Orders = () => {
                 <td>
                   <span className="status return">
                     {o.returnRequest?.status}
+                  </span>
+                </td>
+              )}
+
+              {activeTab === "replacements" && (
+                <td>
+                  <span className="status replacement">
+                    {o.replacementRequest?.status}
                   </span>
                 </td>
               )}
@@ -230,6 +301,29 @@ const Orders = () => {
                         className="btn cancel"
                         onClick={() =>
                           handleReturn(o._id, "rejected")
+                        }
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+
+                {activeTab === "replacements" &&
+                  o.replacementRequest?.status === "pending" && (
+                    <>
+                      <button
+                        className="btn approve"
+                        onClick={() =>
+                          handleReplacement(o._id, "approved")
+                        }
+                      >
+                        Accept
+                      </button>
+
+                      <button
+                        className="btn cancel"
+                        onClick={() =>
+                          handleReplacement(o._id, "rejected")
                         }
                       >
                         Reject

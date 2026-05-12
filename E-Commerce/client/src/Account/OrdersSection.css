@@ -94,7 +94,8 @@
 
 .view-btn,
 .cancel-btn,
-.return-btn {
+.return-btn,
+.replacement-btn {
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
@@ -129,6 +130,21 @@
   transition: 0.2s;
 }
 
+.replacement-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #2979ff, #1557c0);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.replacement-btn:hover {
+  background: linear-gradient(135deg, #1557c0, #0f3f8f);
+  transform: scale(1.03);
+}
+
 .return-btn:hover {
   background: linear-gradient(135deg, #e91e8c, #c2185b);
   transform: scale(1.03);
@@ -156,13 +172,15 @@
 }
 
 /* ===== RETURN STATUS ===== */
-.return-status-section {
+.return-status-section,
+.replacement-status-section {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid #f0e6ec;
 }
 
-.return-status-section h4 {
+.return-status-section h4,
+.replacement-status-section h4 {
   margin-bottom: 8px;
   color: #555;
   font-size: 14px;
@@ -186,6 +204,23 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
+}
+
+.submit-replacement-btn {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2979ff, #1557c0);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.submit-replacement-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .submit-return-btn:disabled {
