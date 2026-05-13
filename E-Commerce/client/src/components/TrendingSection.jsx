@@ -27,6 +27,11 @@ const TrendingSection = () => {
 
       "https://dummyjson.com/products/category/womens-bags",
 
+      "https://dummyjson.com/products/category/womens-watches",
+
+      "https://dummyjson.com/products/category/mens-watches",
+      
+      "https://dummyjson.com/products/category/sunglasses",
     ];
 
     // Fetch all APIs together

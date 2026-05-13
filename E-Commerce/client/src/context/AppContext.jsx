@@ -8,7 +8,7 @@ export const AppProvider = ({ children }) => {
 
   // Shuffle Function
   const shuffleArray = (array) => {
-    return [...array].sort(() => Math.random() - 10);
+    return [...array].sort(() => Math.random() - 0.5);
   };
 
   // FETCH PRODUCTS FROM API
@@ -20,11 +20,11 @@ export const AppProvider = ({ children }) => {
 
       "https://dummyjson.com/products/category/womens-dresses",
 
-      // "https://dummyjson.com/products/category/mens-shoes",
+      "https://dummyjson.com/products/category/mens-shoes",
 
-      // "https://dummyjson.com/products/category/womens-shoes",
+      "https://dummyjson.com/products/category/womens-shoes",
 
-      // "https://dummyjson.com/products/category/womens-bags",
+      "https://dummyjson.com/products/category/womens-bags",
     ];
 
     Promise.all(urls.map((url) => fetch(url).then((res) => res.json())))
